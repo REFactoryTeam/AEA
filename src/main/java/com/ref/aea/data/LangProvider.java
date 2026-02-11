@@ -2,6 +2,7 @@ package com.ref.aea.data;
 
 import appeng.core.localization.LocalizationEnum;
 import com.ref.aea.AEA;
+import com.ref.aea.core.localization.AEAButtonToolTips;
 import com.ref.aea.core.localization.AEAGuiText;
 import net.minecraft.data.PackOutput;
 import net.minecraftforge.common.data.LanguageProvider;
@@ -14,6 +15,7 @@ public class LangProvider extends LanguageProvider {
   @Override
   protected void addTranslations() {
     this.addEnum(AEAGuiText.class);
+    this.addEnum(AEAButtonToolTips.class);
   }
 
   public <T extends Enum<T> & LocalizationEnum> void addEnum(Class<T> localizedEnum) {

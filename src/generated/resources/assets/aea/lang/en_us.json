@@ -1,4 +1,6 @@
 {
   "gui.aea.Blocked": "Blocked",
-  "gui.aea.PatternTimes": "Pattern Times: %s"
+  "gui.aea.PatternTimes": "Pattern Times: %s",
+  "gui.tooltips.aea.CycleProcessingInput": "Cycle Inputs",
+  "gui.tooltips.aea.CycleProcessingInputTooltip": "Change the primary Input of this pattern"
 }

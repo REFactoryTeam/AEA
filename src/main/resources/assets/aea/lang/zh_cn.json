@@ -1,4 +1,6 @@
 {
   "gui.aea.Blocked": "阻塞",
-  "gui.aea.PatternTimes": "发配次数：%s"
+  "gui.aea.PatternTimes": "发配次数：%s",
+  "gui.tooltips.aea.CycleProcessingInput": "轮换原料位置",
+  "gui.tooltips.aea.CycleProcessingInputTooltip": "更改此样板的主原料"
 }
