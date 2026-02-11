@@ -2,6 +2,7 @@ package com.ref.aea;
 
 import com.mojang.logging.LogUtils;
 import com.ref.aea.config.AEAClientConfig;
+import com.ref.aea.config.AEAServerConfig;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.config.ModConfig;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
@@ -15,5 +16,6 @@ public class AEA {
 
   public AEA(FMLJavaModLoadingContext context) {
     context.registerConfig(ModConfig.Type.CLIENT, AEAClientConfig.SPEC);
+    context.registerConfig(ModConfig.Type.SERVER, AEAServerConfig.SPEC);
   }
 }
