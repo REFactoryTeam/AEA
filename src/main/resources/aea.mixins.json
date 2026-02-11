@@ -5,10 +5,15 @@
   "compatibilityLevel": "JAVA_8",
   "refmap": "aea.refmap.json",
   "mixins": [
+    "ae.crafting.blocked.CraftingCpuLogicMixin",
+    "ae.crafting.blocked.CraftingStatusEntryMixin",
+    "ae.crafting.blocked.CraftingStatusMixin",
     "ae.item.QuartzCuttingKnifeItemMixin"
   ],
   "client": [
-    "ae.AEBaseScreenMixin"
+    "ae.AEBaseScreenMixin",
+    "ae.crafting.blocked.client.CraftingCPUScreenMixin",
+    "ae.crafting.blocked.client.CraftingStatusTableRendererMixin"
   ],
   "injectors": {
     "defaultRequire": 1
