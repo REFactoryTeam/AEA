@@ -5,6 +5,7 @@
   "compatibilityLevel": "JAVA_8",
   "refmap": "aea.refmap.json",
   "mixins": [
+    "ae.item.QuartzCuttingKnifeItemMixin"
   ],
   "client": [
     "ae.AEBaseScreenMixin"
