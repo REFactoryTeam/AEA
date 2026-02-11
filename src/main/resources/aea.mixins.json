@@ -8,9 +8,14 @@
     "ae.crafting.blocked.CraftingCpuLogicMixin",
     "ae.crafting.blocked.CraftingStatusEntryMixin",
     "ae.crafting.blocked.CraftingStatusMixin",
+    "ae.crafting.color.CraftingCpuLogicMixin",
+    "ae.crafting.color.CraftingServiceMixin",
+    "ae.crafting.color.ExecutingCraftingJobAccessor",
+    "ae.crafting.color.IPatternDetailsMixin",
     "ae.crafting.patterntimes.CraftingPlanSummaryEntryMixin",
     "ae.crafting.patterntimes.CraftingPlanSummaryMixin",
     "ae.cycle.PatternEncodingTermMenuMixin",
+    "ae.item.EncodedPatternItemCommonMixin",
     "ae.item.QuartzCuttingKnifeItemMixin",
     "ae.recipe.InscriberRecipeCategoryMixin"
   ],
@@ -21,6 +26,7 @@
     "ae.crafting.blocked.client.CraftingStatusTableRendererMixin",
     "ae.crafting.patterntimes.client.CraftConfirmTableRendererMixin",
     "ae.cycle.client.ProcessingEncodingPanelMixin",
+    "ae.item.EncodedPatternItemClientMixin",
     "ae.style.StyleManagerMixin"
   ],
   "injectors": {
