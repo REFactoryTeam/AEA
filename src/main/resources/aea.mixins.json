@@ -10,13 +10,16 @@
     "ae.crafting.blocked.CraftingStatusMixin",
     "ae.crafting.patterntimes.CraftingPlanSummaryEntryMixin",
     "ae.crafting.patterntimes.CraftingPlanSummaryMixin",
+    "ae.cycle.PatternEncodingTermMenuMixin",
     "ae.item.QuartzCuttingKnifeItemMixin"
   ],
   "client": [
     "ae.AEBaseScreenMixin",
     "ae.crafting.blocked.client.CraftingCPUScreenMixin",
     "ae.crafting.blocked.client.CraftingStatusTableRendererMixin",
-    "ae.crafting.patterntimes.client.CraftConfirmTableRendererMixin"
+    "ae.crafting.patterntimes.client.CraftConfirmTableRendererMixin",
+    "ae.cycle.client.ProcessingEncodingPanelMixin",
+    "ae.style.StyleManagerMixin"
   ],
   "injectors": {
     "defaultRequire": 1
