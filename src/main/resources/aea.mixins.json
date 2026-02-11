@@ -11,7 +11,8 @@
     "ae.crafting.patterntimes.CraftingPlanSummaryEntryMixin",
     "ae.crafting.patterntimes.CraftingPlanSummaryMixin",
     "ae.cycle.PatternEncodingTermMenuMixin",
-    "ae.item.QuartzCuttingKnifeItemMixin"
+    "ae.item.QuartzCuttingKnifeItemMixin",
+    "ae.recipe.InscriberRecipeCategoryMixin"
   ],
   "client": [
     "ae.AEBaseScreenMixin",
