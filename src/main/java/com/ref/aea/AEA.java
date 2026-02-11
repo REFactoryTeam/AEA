@@ -1,7 +1,9 @@
 package com.ref.aea;
 
 import com.mojang.logging.LogUtils;
+import com.ref.aea.config.AEAClientConfig;
 import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.fml.config.ModConfig;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import org.slf4j.Logger;
 
@@ -11,5 +13,7 @@ public class AEA {
 
   public static final Logger LOGGER = LogUtils.getLogger();
 
-  public AEA(FMLJavaModLoadingContext context) {}
+  public AEA(FMLJavaModLoadingContext context) {
+    context.registerConfig(ModConfig.Type.CLIENT, AEAClientConfig.SPEC);
+  }
 }
