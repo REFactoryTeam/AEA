@@ -11,6 +11,7 @@
     "ae.crafting.patterntimes.CraftingPlanSummaryEntryMixin",
     "ae.crafting.patterntimes.CraftingPlanSummaryMixin",
     "ae.cycle.PatternEncodingTermMenuMixin",
+    "ae.item.EncodedPatternItemCommonMixin",
     "ae.item.QuartzCuttingKnifeItemMixin",
     "ae.recipe.InscriberRecipeCategoryMixin"
   ],
@@ -21,6 +22,7 @@
     "ae.crafting.blocked.client.CraftingStatusTableRendererMixin",
     "ae.crafting.patterntimes.client.CraftConfirmTableRendererMixin",
     "ae.cycle.client.ProcessingEncodingPanelMixin",
+    "ae.item.EncodedPatternItemClientMixin",
     "ae.style.StyleManagerMixin"
   ],
   "injectors": {
