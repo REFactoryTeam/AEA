@@ -66,7 +66,7 @@ public enum GlobalModifier implements PatternEncodingModifier<ResourceLocation> 
             .toList();
 
     return new ModificationResult(
-        processedInputs, processedOutputs, modificationResult.mergeAdjacently());
+        processedInputs, processedOutputs, AEAClientConfig.globalMergeMode);
   }
 
   public GenericStack applyMultiplier(GenericStack stack) {

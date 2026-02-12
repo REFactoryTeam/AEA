@@ -18,6 +18,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import org.apache.commons.lang3.tuple.Pair;
+import org.jetbrains.annotations.NotNull;
 
 @OnlyIn(Dist.CLIENT)
 public class PatternEncodingModifierService {
@@ -45,50 +46,80 @@ public class PatternEncodingModifierService {
       boolean maxTransfer) {
     List<List<GenericStack>> inputs = GenericEntryStackHelper.ofInputs(slotsView);
     List<GenericStack> outputs = GenericEntryStackHelper.ofOutputs(slotsView);
+
     PatternEncodingModifier.ModificationResult modificationResult =
-        new PatternEncodingModifier.ModificationResult(inputs, outputs, false);
+        new PatternEncodingModifier.ModificationResult(
+            inputs, outputs, PatternEncodingModifier.MergeMode.GLOBAL);
+
     PatternEncodingModifier.ModificationContext modificationContext =
         new PatternEncodingModifier.ModificationContext(recipeBase, slotsView, player, maxTransfer);
 
     for (var modifier : Modifiers) {
-      modificationResult = modifier.modify(modificationResult, modificationContext);
+      modificationResult = getModificationResult(modificationResult, modificationContext, modifier);
     }
-    modificationResult = GlobalModifier.INSTANCE.modify(modificationResult, modificationContext);
 
-    if (modificationResult.mergeAdjacently()) {
-      PatternEncodingModifierService.encodeProcessingRecipeAdjacentMerge(
-          menu, modificationResult.inputs(), modificationResult.outputs());
-    } else {
+    modificationResult =
+        getModificationResult(modificationResult, modificationContext, GlobalModifier.INSTANCE);
+
+    if (modificationResult.mergeMode() == PatternEncodingModifier.MergeMode.GLOBAL) {
       EncodingHelper.encodeProcessingRecipe(
           menu, modificationResult.inputs(), modificationResult.outputs());
+    } else {
+      PatternEncodingModifierService.encodeProcessingRecipeCustom(
+          menu,
+          modificationResult.inputs(),
+          modificationResult.outputs(),
+          modificationResult.mergeMode());
     }
   }
 
-  public static void encodeProcessingRecipeAdjacentMerge(
+  private static PatternEncodingModifier.@NotNull ModificationResult getModificationResult(
+      PatternEncodingModifier.ModificationResult modificationResult,
+      PatternEncodingModifier.ModificationContext modificationContext,
+      PatternEncodingModifier<?> modifier) {
+    var beforeGlobalMode = modificationResult.mergeMode();
+    var afterGlobalResult = modifier.modify(modificationResult, modificationContext);
+
+    if (afterGlobalResult.mergeMode().ordinal() < beforeGlobalMode.ordinal()) {
+      modificationResult =
+          new PatternEncodingModifier.ModificationResult(
+              afterGlobalResult.inputs(), afterGlobalResult.outputs(), beforeGlobalMode);
+    } else {
+      modificationResult = afterGlobalResult;
+    }
+    return modificationResult;
+  }
+
+  public static void encodeProcessingRecipeCustom(
       PatternEncodingTermMenu menu,
       List<List<GenericStack>> genericIngredients,
-      List<GenericStack> genericResults) {
+      List<GenericStack> genericResults,
+      PatternEncodingModifier.MergeMode mode) {
+
     menu.setMode(EncodingMode.PROCESSING);
     Map<AEKey, Integer> ingredientPriorities =
         EncodingHelper.getIngredientPriorities(menu, ENTRY_COMPARATOR);
-    encodeBestMatchingStacksIntoSlotsAdjacent(
-        genericIngredients, ingredientPriorities, menu.getProcessingInputSlots());
-    encodeBestMatchingStacksIntoSlotsAdjacent(
+
+    encodeBestMatchingStacksIntoSlots(
+        genericIngredients, ingredientPriorities, menu.getProcessingInputSlots(), mode);
+    encodeBestMatchingStacksIntoSlots(
         genericResults.stream().map(List::of).toList(),
         ingredientPriorities,
-        menu.getProcessingOutputSlots());
+        menu.getProcessingOutputSlots(),
+        mode);
   }
 
-  private static void encodeBestMatchingStacksIntoSlotsAdjacent(
+  private static void encodeBestMatchingStacksIntoSlots(
       List<List<GenericStack>> possibleInputsBySlot,
       Map<AEKey, Integer> ingredientPriorities,
-      FakeSlot[] slots) {
+      FakeSlot[] slots,
+      PatternEncodingModifier.MergeMode mode) {
+
     ArrayList<GenericStack> encodedInputs = new ArrayList<>();
 
     for (List<GenericStack> genericIngredient : possibleInputsBySlot) {
       if (!genericIngredient.isEmpty()) {
-        addOrMergeAdjacent(
-            encodedInputs, findBestIngredient(ingredientPriorities, genericIngredient));
+        addStack(encodedInputs, findBestIngredient(ingredientPriorities, genericIngredient), mode);
       }
     }
 
@@ -111,8 +142,9 @@ public class PatternEncodingModifierService {
         .orElseThrow();
   }
 
-  private static void addOrMergeAdjacent(List<GenericStack> stacks, GenericStack newStack) {
-    if (!stacks.isEmpty()) {
+  private static void addStack(
+      List<GenericStack> stacks, GenericStack newStack, PatternEncodingModifier.MergeMode mode) {
+    if (mode == PatternEncodingModifier.MergeMode.ADJACENT && !stacks.isEmpty()) {
       int lastIndex = stacks.size() - 1;
       GenericStack lastStack = stacks.get(lastIndex);
 
