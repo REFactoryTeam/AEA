@@ -17,7 +17,10 @@
     "ae.cycle.PatternEncodingTermMenuMixin",
     "ae.item.EncodedPatternItemCommonMixin",
     "ae.item.QuartzCuttingKnifeItemMixin",
-    "ae.recipe.InscriberRecipeCategoryMixin"
+    "ae.recipe.InscriberRecipeCategoryMixin",
+    "buildinggadgets2.PacketUpdateTemplateManagerAccessor",
+    "buildinggadgets2.PacketUpdateTemplateManagerMixin",
+    "buildinggadgets2.TemplateManagerHandlerMixin"
   ],
   "client": [
     "ae.AEBaseScreenMixin",
