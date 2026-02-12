@@ -28,6 +28,7 @@ public enum MechanicalCraftingRecipePatternEncodingModifier
       ModificationResult modificationResult,
       ModificationContext modificationContext,
       Boolean customContext) {
-    return new ModificationResult(modificationResult.inputs(), modificationResult.outputs(), true);
+    return new ModificationResult(
+        modificationResult.inputs(), modificationResult.outputs(), MergeMode.ADJACENT);
   }
 }
