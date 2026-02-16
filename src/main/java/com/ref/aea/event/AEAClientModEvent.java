@@ -3,8 +3,6 @@ package com.ref.aea.event;
 import appeng.core.definitions.AEItems;
 import appeng.crafting.pattern.EncodedPatternItem;
 import com.ref.aea.AEA;
-import com.ref.aea.core.modifier.PatternEncodingModifierService;
-import com.ref.aea.integration.create.MechanicalCraftingRecipePatternEncodingModifier;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import net.minecraft.network.chat.Component;
@@ -30,14 +28,6 @@ import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
     value = Dist.CLIENT)
 public class AEAClientModEvent {
 
-  @SubscribeEvent
-  public static void commonSetup(final FMLCommonSetupEvent event) {
-    event.enqueueWork(
-        () -> {
-          PatternEncodingModifierService.register(
-              MechanicalCraftingRecipePatternEncodingModifier.INSTANCE);
-        });
-  }
 
   @SubscribeEvent
   public static void onAddPackFinders(AddPackFindersEvent event) {
