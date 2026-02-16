@@ -5,6 +5,9 @@ import com.mojang.logging.LogUtils;
 import com.ref.aea.api.mirror.IMirrorPatternService;
 import com.ref.aea.config.AEAClientConfig;
 import com.ref.aea.config.AEAServerConfig;
+import com.ref.aea.core.definitions.AEABlockEntityType;
+import com.ref.aea.core.definitions.AEABlocks;
+import com.ref.aea.core.definitions.AEAItems;
 import com.ref.aea.core.mirror.MirrorPatternService;
 import com.ref.aea.integration.create.CreateIntegration;
 import net.minecraftforge.fml.ModList;
@@ -25,6 +28,11 @@ public class AEA {
     if (CREATE) {
       CreateIntegration.init();
     }
+
+    AEAItems.DR.register(context.getModEventBus());
+    AEABlocks.DR.register(context.getModEventBus());
+    AEABlockEntityType.DR.register(context.getModEventBus());
+
     context.registerConfig(ModConfig.Type.CLIENT, AEAClientConfig.SPEC);
     context.registerConfig(ModConfig.Type.SERVER, AEAServerConfig.SPEC);
 
