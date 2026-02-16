@@ -1,7 +1,7 @@
 package com.ref.aea.mixin.ae;
 
 import appeng.client.gui.AEBaseScreen;
-import com.ref.aea.api.IRainbowRender;
+import com.ref.aea.api.client.IRainbowRender;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.renderer.Rect2i;
 import net.minecraftforge.api.distmarker.Dist;
