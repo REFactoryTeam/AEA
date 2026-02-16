@@ -16,6 +16,7 @@ public class LangProvider extends LanguageProvider {
   protected void addTranslations() {
     this.addEnum(AEAGuiText.class);
     this.addEnum(AEAButtonToolTips.class);
+    this.add("tooltip.mirror.sourcePos.info", "[%s,%s,%s] (%s) %s");
   }
 
   public <T extends Enum<T> & LocalizationEnum> void addEnum(Class<T> localizedEnum) {
