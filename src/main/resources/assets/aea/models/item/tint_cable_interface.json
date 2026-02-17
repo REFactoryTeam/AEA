@@ -1,0 +1,17 @@
+{
+  "render_type": "minecraft:cutout",
+  "credit": "Made with Blockbench by Sea_Kerman",
+  "parent": "ae2:item/part_base",
+  "textures": {
+    "front": "ae2:part/interface"
+  },
+  "elements": [
+    {
+      "from": [1.999, 1.999, 6.999],
+      "to": [14.001, 14.001, 9.001],
+      "faces": {
+        "north": { "uv": [2, 2, 14, 14], "texture": "#front","tintindex": 1 }
+      }
+    }
+  ]
+}

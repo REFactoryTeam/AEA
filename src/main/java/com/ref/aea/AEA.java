@@ -9,6 +9,7 @@ import com.ref.aea.core.definitions.AEABlockEntityType;
 import com.ref.aea.core.definitions.AEABlocks;
 import com.ref.aea.core.definitions.AEAItems;
 import com.ref.aea.core.mirror.MirrorPatternService;
+import com.ref.aea.integration.ae2.AE2Integration;
 import com.ref.aea.integration.create.CreateIntegration;
 import net.minecraftforge.fml.ModList;
 import net.minecraftforge.fml.common.Mod;
@@ -22,9 +23,13 @@ public class AEA {
 
   public static final Logger LOGGER = LogUtils.getLogger();
 
+  public static boolean AE2 = ModList.get().isLoaded("ae2");
   public static boolean CREATE = ModList.get().isLoaded("create");
 
   public AEA(FMLJavaModLoadingContext context) {
+    if (AE2) {
+      AE2Integration.init();
+    }
     if (CREATE) {
       CreateIntegration.init();
     }

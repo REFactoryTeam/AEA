@@ -17,6 +17,7 @@
     "ae.cycle.PatternEncodingTermMenuMixin",
     "ae.item.EncodedPatternItemCommonMixin",
     "ae.item.QuartzCuttingKnifeItemMixin",
+    "ae.mirror.PatternProviderLogicMixin",
     "ae.recipe.InscriberRecipeCategoryMixin",
     "buildinggadgets2.PacketUpdateTemplateManagerAccessor",
     "buildinggadgets2.PacketUpdateTemplateManagerMixin",

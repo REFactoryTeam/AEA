@@ -1,0 +1,7 @@
+{
+  "render_type": "minecraft:cutout",
+  "parent": "aea:block/tint_cube_all",
+  "textures": {
+    "all": "aea:block/mirror_pattern_provider_overlay"
+  }
+}
