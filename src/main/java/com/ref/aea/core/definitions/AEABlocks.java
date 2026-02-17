@@ -21,16 +21,18 @@ public class AEABlocks {
 
   public static <T extends Block> RegistryObject<T> block(
       String id, String englishName, Supplier<T> blockSupplier) {
-    return block(id, englishName, blockSupplier, null);
+    return block(id, englishName, blockSupplier, null, true);
   }
 
   public static <T extends Block> RegistryObject<T> block(
       String id,
       String englishName,
       Supplier<T> blockSupplier,
-      @Nullable Function<Block, BlockItem> itemFactory) {
+      @Nullable Function<Block, BlockItem> itemFactory,
+      boolean isCreativeModeTab) {
     var deferredBlock = DR.register(id, blockSupplier);
-    AEAItems.blockItem(id, englishName, () -> getBlockItem(id, itemFactory, deferredBlock));
+    AEAItems.blockItem(
+        id, englishName, () -> getBlockItem(id, itemFactory, deferredBlock), isCreativeModeTab);
     LangProvider.Blocks.put(deferredBlock, englishName);
     return deferredBlock;
   }

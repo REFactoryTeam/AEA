@@ -29,24 +29,31 @@ public class AEAItems {
       Class<T> partClass,
       Function<IPartItem<T>, T> factory) {
     PartModels.registerModels(PartModelsHelper.createModels(partClass));
-    return item(id, englishName, () -> new PartItem<>(properties, partClass, factory), true);
+    return item(id, englishName, () -> new PartItem<>(properties, partClass, factory));
   }
 
   public static <T extends Item> RegistryObject<T> item(
       String id, String englishName, Supplier<T> itemSupplier) {
-    return item(id, englishName, itemSupplier, true);
+    return item(id, englishName, itemSupplier, true, true);
   }
 
   public static <T extends Item> RegistryObject<T> blockItem(
-      String id, String englishName, Supplier<T> itemSupplier) {
-    return item(id, englishName, itemSupplier, false);
+      String id, String englishName, Supplier<T> itemSupplier, boolean isCreativeModeTab) {
+    return item(id, englishName, itemSupplier, false, isCreativeModeTab);
   }
 
   public static <T extends Item> RegistryObject<T> item(
-      String id, String englishName, Supplier<T> itemSupplier, boolean isData) {
+      String id,
+      String englishName,
+      Supplier<T> itemSupplier,
+      boolean isData,
+      boolean isCreativeModeTab) {
     var deferredItem = DR.register(id, itemSupplier);
     if (isData) {
       LangProvider.Items.put(deferredItem, englishName);
+    }
+    if (isCreativeModeTab) {
+      AEATab.ADD_TAB_ItemLike.add(deferredItem);
     }
     return deferredItem;
   }

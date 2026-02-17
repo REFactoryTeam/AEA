@@ -8,6 +8,7 @@ import com.ref.aea.config.AEAServerConfig;
 import com.ref.aea.core.definitions.AEABlockEntityType;
 import com.ref.aea.core.definitions.AEABlocks;
 import com.ref.aea.core.definitions.AEAItems;
+import com.ref.aea.core.definitions.AEATab;
 import com.ref.aea.core.mirror.MirrorPatternService;
 import com.ref.aea.integration.aae.AAEIntegration;
 import com.ref.aea.integration.ae2.AE2Integration;
@@ -47,6 +48,7 @@ public class AEA {
     AEAItems.DR.register(context.getModEventBus());
     AEABlocks.DR.register(context.getModEventBus());
     AEABlockEntityType.DR.register(context.getModEventBus());
+    AEATab.DR.register(context.getModEventBus());
 
     context.registerConfig(ModConfig.Type.CLIENT, AEAClientConfig.SPEC);
     context.registerConfig(ModConfig.Type.SERVER, AEAServerConfig.SPEC);
