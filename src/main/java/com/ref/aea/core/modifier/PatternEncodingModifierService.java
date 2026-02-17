@@ -10,7 +10,7 @@ import appeng.menu.me.items.PatternEncodingTermMenu;
 import appeng.menu.slot.FakeSlot;
 import appeng.parts.encoding.EncodingMode;
 import com.google.common.math.LongMath;
-import com.ref.aea.api.modifier.PatternEncodingModifier;
+import com.ref.aea.api.client.PatternEncodingModifier;
 import java.util.*;
 import mezz.jei.api.gui.ingredient.IRecipeSlotsView;
 import net.minecraft.world.entity.player.Player;
