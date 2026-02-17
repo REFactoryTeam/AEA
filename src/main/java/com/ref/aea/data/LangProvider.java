@@ -4,6 +4,8 @@ import appeng.core.localization.LocalizationEnum;
 import com.ref.aea.AEA;
 import com.ref.aea.core.localization.AEAButtonToolTips;
 import com.ref.aea.core.localization.AEAGuiText;
+import com.ref.aea.core.localization.AEAToolTips;
+import com.ref.aea.integration.jade.MirrorProvider;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Supplier;
@@ -42,7 +44,7 @@ public class LangProvider extends LanguageProvider {
 
     this.addEnum(AEAGuiText.class);
     this.addEnum(AEAButtonToolTips.class);
-    this.add("tooltip.mirror.sourcePos.info", "[%s,%s,%s] (%s) %s");
+    this.addEnum(AEAToolTips.class);
   }
 
   public <T extends Enum<T> & LocalizationEnum> void addEnum(Class<T> localizedEnum) {

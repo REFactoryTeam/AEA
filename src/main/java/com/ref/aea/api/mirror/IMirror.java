@@ -4,6 +4,7 @@ import appeng.api.networking.IGridNode;
 import appeng.api.networking.IGridNodeService;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
+import com.ref.aea.core.localization.AEAToolTips;
 import java.util.Optional;
 import javax.annotation.Nullable;
 import net.minecraft.core.Direction;
@@ -30,7 +31,7 @@ public interface IMirror<T> extends IGridNodeService {
 
   static @NotNull MutableComponent getToolTip(IMirror.SourcePos sourcePos) {
     return Component.translatable(
-        "tooltip.mirror.sourcePos.info",
+        AEAToolTips.MirrorInfo.getTranslationKey(),
         Component.literal(String.valueOf(sourcePos.globalPos().pos().getX()))
             .withStyle(Style.EMPTY.withColor(15702682)),
         Component.literal(String.valueOf(sourcePos.globalPos().pos().getY()))
