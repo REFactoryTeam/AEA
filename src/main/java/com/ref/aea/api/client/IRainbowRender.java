@@ -28,4 +28,6 @@ public interface IRainbowRender {
   void drawWorldRainbowOutline(AABB box, RenderLevelStageEvent event);
 
   void drawWorldRainbowFill(AABB box, RenderLevelStageEvent event, float alpha);
+
+  int getRainbowColor(long time, float offset);
 }

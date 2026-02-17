@@ -1,8 +1,10 @@
 package com.ref.aea.event;
 
 import appeng.core.definitions.AEItems;
-import appeng.crafting.pattern.EncodedPatternItem;
 import com.ref.aea.AEA;
+import com.ref.aea.api.client.IRainbowRender;
+import com.ref.aea.api.mirror.IMirror;
+import com.ref.aea.core.definitions.AEAItems;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import net.minecraft.network.chat.Component;
@@ -19,7 +21,6 @@ import net.minecraftforge.event.AddPackFindersEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.ModList;
 import net.minecraftforge.fml.common.Mod;
-import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 
 @OnlyIn(Dist.CLIENT)
 @Mod.EventBusSubscriber(
@@ -27,7 +28,6 @@ import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
     bus = Mod.EventBusSubscriber.Bus.MOD,
     value = Dist.CLIENT)
 public class AEAClientModEvent {
-
 
   @SubscribeEvent
   public static void onAddPackFinders(AddPackFindersEvent event) {
@@ -71,20 +71,27 @@ public class AEAClientModEvent {
   @SubscribeEvent
   public static void registerItemColors(RegisterColorHandlersEvent.Item event) {
     event.register(
-        AEAClientModEvent::getTintColor,
+        AEAClientModEvent::getColorForDyeableItem,
         AEItems.CRAFTING_PATTERN,
         AEItems.PROCESSING_PATTERN,
         AEItems.SMITHING_TABLE_PATTERN,
         AEItems.STONECUTTING_PATTERN);
+    event.register(AEAClientModEvent::getColorForTime, AEAItems.MIRROR_CONNECTION_TOOL.get());
   }
 
-  public static int getTintColor(ItemStack stack, int tintIndex) {
-    if (tintIndex == 1
-        && stack.getItem() instanceof EncodedPatternItem encodedPattern
-        && encodedPattern instanceof DyeableLeatherItem dyeableEncodedPattern) {
+  public static int getColorForDyeableItem(ItemStack stack, int tintIndex) {
+    if (tintIndex == 1 && stack.getItem() instanceof DyeableLeatherItem dyeableEncodedPattern) {
       return dyeableEncodedPattern.getColor(stack);
     } else {
-      return 0xFFFFFF;
+      return -1;
     }
+  }
+
+  public static int getColorForTime(ItemStack stack, int tintIndex) {
+    var tag = stack.getTag();
+    if (tag != null && IMirror.readSourceFromNBT(tag).isPresent()) {
+      return IRainbowRender.INSTANCE.getRainbowColor(System.currentTimeMillis(), 0.0f);
+    }
+    return -1;
   }
 }

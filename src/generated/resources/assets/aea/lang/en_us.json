@@ -3,6 +3,7 @@
   "gui.aea.PatternTimes": "Pattern Times: %s",
   "gui.tooltips.aea.CycleProcessingInput": "Cycle Inputs",
   "gui.tooltips.aea.CycleProcessingInputTooltip": "Change the primary Input of this pattern",
+  "item.aea.mirror_connection_tool": "Mirror Connection Tool",
   "tooltips.aea.MirrorInfo": "[%s,%s,%s] (%s) %s",
   "tooltips.aea.MirrorInfoClear": "Connection cleared"
 }

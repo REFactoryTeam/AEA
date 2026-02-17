@@ -169,7 +169,7 @@ public final class RenderUtil implements IRainbowRender {
     RenderSystem.disableBlend();
   }
 
-  private int getRainbowColor(long time, float offset) {
+  public int getRainbowColor(long time, float offset) {
     float hue = ((time % 3000L) / 3000.0f + offset) % 1.0f;
     return Mth.hsvToRgb(hue, 0.8f, 1.0f) | 0xFF000000;
   }
