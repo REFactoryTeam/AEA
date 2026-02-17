@@ -1,0 +1,14 @@
+{
+  "loader": "forge:composite",
+  "textures": {
+    "particle": "ae2:part/pattern_provider_back"
+  },
+  "children": {
+    "base_layer": {
+      "parent": "advanced_ae:part/adv_pattern_provider_part"
+    },
+    "overlay_layer": {
+      "parent": "aea:part/mirror_pattern_provider_overlay"
+    }
+  }
+}

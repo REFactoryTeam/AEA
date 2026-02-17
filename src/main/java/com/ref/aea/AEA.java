@@ -9,6 +9,7 @@ import com.ref.aea.core.definitions.AEABlockEntityType;
 import com.ref.aea.core.definitions.AEABlocks;
 import com.ref.aea.core.definitions.AEAItems;
 import com.ref.aea.core.mirror.MirrorPatternService;
+import com.ref.aea.integration.aae.AAEIntegration;
 import com.ref.aea.integration.ae2.AE2Integration;
 import com.ref.aea.integration.create.CreateIntegration;
 import com.ref.aea.integration.eae.EAEIntegration;
@@ -26,6 +27,7 @@ public class AEA {
 
   public static boolean AE2 = ModList.get().isLoaded("ae2");
   public static boolean EAE = ModList.get().isLoaded("expatternprovider");
+  public static boolean AAE = ModList.get().isLoaded("advanced_ae");
   public static boolean CREATE = ModList.get().isLoaded("create");
 
   public AEA(FMLJavaModLoadingContext context) {
@@ -34,6 +36,9 @@ public class AEA {
     }
     if (EAE) {
       EAEIntegration.init();
+    }
+    if (AAE) {
+      AAEIntegration.init();
     }
     if (CREATE) {
       CreateIntegration.init();

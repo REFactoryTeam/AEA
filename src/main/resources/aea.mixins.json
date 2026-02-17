@@ -5,6 +5,7 @@
   "compatibilityLevel": "JAVA_8",
   "refmap": "aea.refmap.json",
   "mixins": [
+    "aae.AdvPatternProviderLogicMixin",
     "ae.crafting.blocked.CraftingCpuLogicMixin",
     "ae.crafting.blocked.CraftingStatusEntryMixin",
     "ae.crafting.blocked.CraftingStatusMixin",
@@ -32,6 +33,7 @@
     "ae.crafting.patterntimes.client.CraftConfirmTableRendererMixin",
     "ae.cycle.client.ProcessingEncodingPanelMixin",
     "ae.item.EncodedPatternItemClientMixin",
+    "ae.mirror.CableBusColorMixin",
     "ae.style.StyleManagerMixin"
   ],
   "injectors": {
