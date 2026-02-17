@@ -11,6 +11,7 @@ import com.ref.aea.core.definitions.AEAItems;
 import com.ref.aea.core.mirror.MirrorPatternService;
 import com.ref.aea.integration.ae2.AE2Integration;
 import com.ref.aea.integration.create.CreateIntegration;
+import com.ref.aea.integration.eae.EAEIntegration;
 import net.minecraftforge.fml.ModList;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.config.ModConfig;
@@ -24,11 +25,15 @@ public class AEA {
   public static final Logger LOGGER = LogUtils.getLogger();
 
   public static boolean AE2 = ModList.get().isLoaded("ae2");
+  public static boolean EAE = ModList.get().isLoaded("expatternprovider");
   public static boolean CREATE = ModList.get().isLoaded("create");
 
   public AEA(FMLJavaModLoadingContext context) {
     if (AE2) {
       AE2Integration.init();
+    }
+    if (EAE) {
+      EAEIntegration.init();
     }
     if (CREATE) {
       CreateIntegration.init();
