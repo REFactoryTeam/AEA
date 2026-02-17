@@ -45,11 +45,17 @@ public class LangProvider extends LanguageProvider {
     this.addEnum(AEAGuiText.class);
     this.addEnum(AEAButtonToolTips.class);
     this.addEnum(AEAToolTips.class);
+
+    this.addJadeProvider(MirrorProvider.INSTANCE.ID, "Mirror Info");
   }
 
   public <T extends Enum<T> & LocalizationEnum> void addEnum(Class<T> localizedEnum) {
     for (var enumConstant : localizedEnum.getEnumConstants()) {
       add(enumConstant.getTranslationKey(), enumConstant.getEnglishText());
     }
+  }
+
+  public void addJadeProvider(ResourceLocation id, String name) {
+    add("config.jade.plugin_" + id.getNamespace() + "." + id.getPath(), name);
   }
 }
