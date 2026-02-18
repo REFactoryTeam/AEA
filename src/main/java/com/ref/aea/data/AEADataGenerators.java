@@ -28,5 +28,6 @@ public class AEADataGenerators {
             new AEAItemTagsProvider(
                 c, lookupProvider, blockTagsProvider.contentsGetter(), existingFileHelper));
     pack.addProvider(c -> new AEAFluidTagsProvider(c, lookupProvider, existingFileHelper));
+    pack.addProvider(AEARecipeProvider::new);
   }
 }

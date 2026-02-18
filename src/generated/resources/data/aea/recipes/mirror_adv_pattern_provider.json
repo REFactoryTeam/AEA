@@ -1,0 +1,32 @@
+{
+  "type": "forge:conditional",
+  "recipes": [
+    {
+      "conditions": [
+        {
+          "type": "forge:mod_loaded",
+          "modid": "advanced_ae"
+        }
+      ],
+      "recipe": {
+        "type": "ae2:transform",
+        "circumstance": {
+          "type": "fluid",
+          "tag": "advanced_ae:quantum_infusion_source"
+        },
+        "ingredients": [
+          {
+            "item": "advanced_ae:small_adv_pattern_provider"
+          },
+          {
+            "item": "ae2:singularity"
+          }
+        ],
+        "result": {
+          "count": 4,
+          "item": "aea:mirror_adv_pattern_provider"
+        }
+      }
+    }
+  ]
+}

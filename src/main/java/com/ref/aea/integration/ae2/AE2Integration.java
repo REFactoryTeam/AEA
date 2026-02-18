@@ -1,16 +1,21 @@
 package com.ref.aea.integration.ae2;
 
+import appeng.core.definitions.AEBlocks;
+import appeng.core.definitions.AEItems;
 import appeng.items.parts.PartItem;
+import appeng.recipes.transform.TransformCircumstance;
 import com.ref.aea.core.definitions.AEABlockEntityType;
 import com.ref.aea.core.definitions.AEABlocks;
 import com.ref.aea.core.definitions.AEAItems;
 import com.ref.aea.data.AEABlockTagsProvider;
 import com.ref.aea.data.AEAItemTagsProvider;
+import com.ref.aea.data.AEARecipeProvider;
 import com.ref.aea.integration.ae2.mirror.MirrorPatternProviderBlock;
 import com.ref.aea.integration.ae2.mirror.MirrorPatternProviderBlockEntity;
 import com.ref.aea.integration.ae2.mirror.MirrorPatternProviderPart;
 import java.util.List;
 import net.minecraft.tags.BlockTags;
+import net.minecraft.tags.FluidTags;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraftforge.api.distmarker.Dist;
@@ -55,6 +60,14 @@ public class AE2Integration {
         List.of(
             MIRROR_PATTERN_PROVIDER_BLOCK.getKey().location(),
             MIRROR_PATTERN_PROVIDER_PART.getKey().location()));
+
+    AEARecipeProvider.addMutualConversionRecipes(
+        MIRROR_PATTERN_PROVIDER_BLOCK,
+        MIRROR_PATTERN_PROVIDER_PART,
+        "ae2",
+        TransformCircumstance.fluid(FluidTags.WATER),
+        AEARecipeProvider.i(AEBlocks.PATTERN_PROVIDER),
+        AEARecipeProvider.i(AEItems.SINGULARITY));
 
     DistExecutor.safeRunWhenOn(Dist.CLIENT, () -> AE2IntegrationClient::init);
   }

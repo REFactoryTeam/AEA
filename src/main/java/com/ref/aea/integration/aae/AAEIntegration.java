@@ -1,12 +1,15 @@
 package com.ref.aea.integration.aae;
 
+import appeng.core.definitions.AEItems;
 import appeng.items.parts.PartItem;
+import appeng.recipes.transform.TransformCircumstance;
 import com.ref.aea.core.definitions.AEABlockEntityType;
 import com.ref.aea.core.definitions.AEABlocks;
 import com.ref.aea.core.definitions.AEAItems;
 import com.ref.aea.data.AEABlockTagsProvider;
 import com.ref.aea.data.AEAFluidTagsProvider;
 import com.ref.aea.data.AEAItemTagsProvider;
+import com.ref.aea.data.AEARecipeProvider;
 import com.ref.aea.integration.aae.mirror.*;
 import java.util.List;
 import net.minecraft.core.registries.Registries;
@@ -18,6 +21,7 @@ import net.minecraft.world.level.material.Fluid;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.fml.DistExecutor;
 import net.minecraftforge.registries.RegistryObject;
+import net.pedroksl.advanced_ae.common.definitions.AAEBlocks;
 import net.pedroksl.advanced_ae.common.definitions.AAEFluids;
 
 public class AAEIntegration {
@@ -99,6 +103,22 @@ public class AAEIntegration {
         List.of(
             AAEFluids.QUANTUM_INFUSION.sourceRegistry().getKey().location(),
             AAEFluids.QUANTUM_INFUSION.flowingRegistry().getKey().location()));
+
+    AEARecipeProvider.addMutualConversionRecipes(
+        MIRROR_ADV_PATTERN_PROVIDER_BLOCK,
+        MIRROR_ADV_PATTERN_PROVIDER_PART,
+        "advanced_ae",
+        TransformCircumstance.fluid(QUANTUM_INFUSION),
+        AEARecipeProvider.i(AAEBlocks.SMALL_ADV_PATTERN_PROVIDER),
+        AEARecipeProvider.i(AEItems.SINGULARITY));
+
+    AEARecipeProvider.addMutualConversionRecipes(
+        MIRROR_EX_ADV_PATTERN_PROVIDER_BLOCK,
+        MIRROR_EX_ADV_PATTERN_PROVIDER_PART,
+        "advanced_ae",
+        TransformCircumstance.fluid(QUANTUM_INFUSION),
+        AEARecipeProvider.i(AAEBlocks.ADV_PATTERN_PROVIDER),
+        AEARecipeProvider.i(AEItems.SINGULARITY));
 
     DistExecutor.safeRunWhenOn(Dist.CLIENT, () -> AAEIntegrationClient::init);
   }
