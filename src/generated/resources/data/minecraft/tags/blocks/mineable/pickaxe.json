@@ -1,0 +1,20 @@
+{
+  "values": [
+    {
+      "id": "aea:mirror_pattern_provider",
+      "required": false
+    },
+    {
+      "id": "aea:mirror_ex_pattern_provider",
+      "required": false
+    },
+    {
+      "id": "aea:mirror_adv_pattern_provider",
+      "required": false
+    },
+    {
+      "id": "aea:mirror_ex_adv_pattern_provider",
+      "required": false
+    }
+  ]
+}

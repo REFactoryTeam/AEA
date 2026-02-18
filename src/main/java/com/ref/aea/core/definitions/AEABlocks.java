@@ -3,7 +3,7 @@ package com.ref.aea.core.definitions;
 import appeng.block.AEBaseBlock;
 import appeng.block.AEBaseBlockItem;
 import com.ref.aea.AEA;
-import com.ref.aea.data.LangProvider;
+import com.ref.aea.data.AEALangProvider;
 import java.util.function.Function;
 import java.util.function.Supplier;
 import net.minecraft.world.item.BlockItem;
@@ -33,7 +33,7 @@ public class AEABlocks {
     var deferredBlock = DR.register(id, blockSupplier);
     AEAItems.blockItem(
         id, englishName, () -> getBlockItem(id, itemFactory, deferredBlock), isCreativeModeTab);
-    LangProvider.Blocks.put(deferredBlock, englishName);
+    AEALangProvider.Blocks.put(deferredBlock, englishName);
     return deferredBlock;
   }
 

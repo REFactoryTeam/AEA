@@ -19,8 +19,8 @@ import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraft.world.level.block.Block;
 import net.minecraftforge.common.data.LanguageProvider;
 
-public class LangProvider extends LanguageProvider {
-  public LangProvider(PackOutput packOutput) {
+public class AEALangProvider extends LanguageProvider {
+  public AEALangProvider(PackOutput packOutput) {
     super(packOutput, AEA.MOD_ID, "en_us");
   }
 

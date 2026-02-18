@@ -7,7 +7,7 @@ import appeng.items.parts.PartItem;
 import appeng.items.parts.PartModelsHelper;
 import com.ref.aea.AEA;
 import com.ref.aea.core.mirror.MirrorConnectionToolItem;
-import com.ref.aea.data.LangProvider;
+import com.ref.aea.data.AEALangProvider;
 import java.util.function.Function;
 import java.util.function.Supplier;
 import net.minecraft.world.item.Item;
@@ -50,7 +50,7 @@ public class AEAItems {
       boolean isCreativeModeTab) {
     var deferredItem = DR.register(id, itemSupplier);
     if (isData) {
-      LangProvider.Items.put(deferredItem, englishName);
+      AEALangProvider.Items.put(deferredItem, englishName);
     }
     if (isCreativeModeTab) {
       AEATab.ADD_TAB_ItemLike.add(deferredItem);

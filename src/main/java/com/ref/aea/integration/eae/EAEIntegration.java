@@ -4,9 +4,13 @@ import appeng.items.parts.PartItem;
 import com.ref.aea.core.definitions.AEABlockEntityType;
 import com.ref.aea.core.definitions.AEABlocks;
 import com.ref.aea.core.definitions.AEAItems;
+import com.ref.aea.data.AEABlockTagsProvider;
+import com.ref.aea.data.AEAItemTagsProvider;
 import com.ref.aea.integration.eae.mirror.MirrorEXPatternProviderBlock;
 import com.ref.aea.integration.eae.mirror.MirrorEXPatternProviderBlockEntity;
 import com.ref.aea.integration.eae.mirror.MirrorEXPatternProviderPart;
+import java.util.List;
+import net.minecraft.tags.BlockTags;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraftforge.api.distmarker.Dist;
@@ -42,6 +46,16 @@ public class EAEIntegration {
             new Item.Properties(),
             MirrorEXPatternProviderPart.class,
             MirrorEXPatternProviderPart::new);
+
+    AEABlockTagsProvider.BLOCK_OPTIONAL_MAP.put(
+        BlockTags.MINEABLE_WITH_PICKAXE, MIRROR_EX_PATTERN_PROVIDER_BLOCK.getKey().location());
+
+    AEAItemTagsProvider.ITEM_OPTIONAL_MAP.putAll(
+        AEAItemTagsProvider.MIRROR_PATTERN_PROVIDER,
+        List.of(
+            MIRROR_EX_PATTERN_PROVIDER_BLOCK.getKey().location(),
+            MIRROR_EX_PATTERN_PROVIDER_PART.getKey().location()));
+
     DistExecutor.safeRunWhenOn(Dist.CLIENT, () -> EAEIntegrationClient::init);
   }
 }

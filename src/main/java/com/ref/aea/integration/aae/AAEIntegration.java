@@ -4,14 +4,26 @@ import appeng.items.parts.PartItem;
 import com.ref.aea.core.definitions.AEABlockEntityType;
 import com.ref.aea.core.definitions.AEABlocks;
 import com.ref.aea.core.definitions.AEAItems;
+import com.ref.aea.data.AEABlockTagsProvider;
+import com.ref.aea.data.AEAFluidTagsProvider;
+import com.ref.aea.data.AEAItemTagsProvider;
 import com.ref.aea.integration.aae.mirror.*;
+import java.util.List;
+import net.minecraft.core.registries.Registries;
+import net.minecraft.tags.BlockTags;
+import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.minecraft.world.level.material.Fluid;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.fml.DistExecutor;
 import net.minecraftforge.registries.RegistryObject;
+import net.pedroksl.advanced_ae.common.definitions.AAEFluids;
 
 public class AAEIntegration {
+  public static final TagKey<Fluid> QUANTUM_INFUSION =
+      TagKey.create(Registries.FLUID, AAEFluids.QUANTUM_INFUSION.id());
+
   public static RegistryObject<MirrorAdvPatternProviderBlock<MirrorAdvPatternProviderEntity>>
       MIRROR_ADV_PATTERN_PROVIDER_BLOCK;
   public static RegistryObject<BlockEntityType<MirrorAdvPatternProviderEntity>>
@@ -67,6 +79,26 @@ public class AAEIntegration {
             new Item.Properties(),
             MirrorEXAdvPatternProviderPart.class,
             MirrorEXAdvPatternProviderPart::new);
+
+    AEABlockTagsProvider.BLOCK_OPTIONAL_MAP.putAll(
+        BlockTags.MINEABLE_WITH_PICKAXE,
+        List.of(
+            MIRROR_ADV_PATTERN_PROVIDER_BLOCK.getKey().location(),
+            MIRROR_EX_ADV_PATTERN_PROVIDER_BLOCK.getKey().location()));
+
+    AEAItemTagsProvider.ITEM_OPTIONAL_MAP.putAll(
+        AEAItemTagsProvider.MIRROR_PATTERN_PROVIDER,
+        List.of(
+            MIRROR_ADV_PATTERN_PROVIDER_BLOCK.getKey().location(),
+            MIRROR_ADV_PATTERN_PROVIDER_PART.getKey().location(),
+            MIRROR_EX_ADV_PATTERN_PROVIDER_BLOCK.getKey().location(),
+            MIRROR_EX_ADV_PATTERN_PROVIDER_PART.getKey().location()));
+
+    AEAFluidTagsProvider.FLUID_OPTIONAL_MAP.putAll(
+        QUANTUM_INFUSION,
+        List.of(
+            AAEFluids.QUANTUM_INFUSION.sourceRegistry().getKey().location(),
+            AAEFluids.QUANTUM_INFUSION.flowingRegistry().getKey().location()));
 
     DistExecutor.safeRunWhenOn(Dist.CLIENT, () -> AAEIntegrationClient::init);
   }
