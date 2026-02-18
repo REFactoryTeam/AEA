@@ -1,0 +1,6 @@
+{
+  "parent": "item/handheld",
+  "textures": {
+    "layer0": "aea:item/mirror_connection_tool"
+  }
+}

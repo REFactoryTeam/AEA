@@ -5,6 +5,7 @@
   "compatibilityLevel": "JAVA_8",
   "refmap": "aea.refmap.json",
   "mixins": [
+    "aae.AdvPatternProviderLogicMixin",
     "ae.crafting.blocked.CraftingCpuLogicMixin",
     "ae.crafting.blocked.CraftingStatusEntryMixin",
     "ae.crafting.blocked.CraftingStatusMixin",
@@ -17,6 +18,7 @@
     "ae.cycle.PatternEncodingTermMenuMixin",
     "ae.item.EncodedPatternItemCommonMixin",
     "ae.item.QuartzCuttingKnifeItemMixin",
+    "ae.mirror.PatternProviderLogicMixin",
     "ae.recipe.InscriberRecipeCategoryMixin",
     "buildinggadgets2.PacketUpdateTemplateManagerAccessor",
     "buildinggadgets2.PacketUpdateTemplateManagerMixin",
@@ -31,6 +33,7 @@
     "ae.crafting.patterntimes.client.CraftConfirmTableRendererMixin",
     "ae.cycle.client.ProcessingEncodingPanelMixin",
     "ae.item.EncodedPatternItemClientMixin",
+    "ae.mirror.CableBusColorMixin",
     "ae.style.StyleManagerMixin"
   ],
   "injectors": {

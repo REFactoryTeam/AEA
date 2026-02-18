@@ -1,0 +1,6 @@
+{
+  "parent": "aea:item/tint_cable_interface",
+  "textures": {
+    "front": "aea:part/mirror_pattern_provider_overlay"
+  }
+}

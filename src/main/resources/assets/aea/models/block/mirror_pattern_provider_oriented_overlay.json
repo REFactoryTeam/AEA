@@ -1,0 +1,13 @@
+{
+  "render_type": "minecraft:cutout",
+  "parent": "aea:block/tint_cube",
+  "textures": {
+    "particle": "aea:block/mirror_pattern_provider",
+    "down": "aea:block/mirror_pattern_provider_overlay",
+    "up": "aea:block/mirror_pattern_provider_alternate_front_overlay",
+    "north": "aea:block/mirror_pattern_provider_alternate_arrow_overlay",
+    "south": "aea:block/mirror_pattern_provider_alternate_arrow_overlay",
+    "east": "aea:block/mirror_pattern_provider_alternate_arrow_overlay",
+    "west": "aea:block/mirror_pattern_provider_alternate_arrow_overlay"
+  }
+}

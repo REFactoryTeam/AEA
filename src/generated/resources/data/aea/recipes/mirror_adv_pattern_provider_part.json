@@ -1,0 +1,25 @@
+{
+  "type": "forge:conditional",
+  "recipes": [
+    {
+      "conditions": [
+        {
+          "type": "forge:mod_loaded",
+          "modid": "advanced_ae"
+        }
+      ],
+      "recipe": {
+        "type": "minecraft:crafting_shapeless",
+        "category": "misc",
+        "ingredients": [
+          {
+            "item": "aea:mirror_adv_pattern_provider"
+          }
+        ],
+        "result": {
+          "item": "aea:mirror_adv_pattern_provider_part"
+        }
+      }
+    }
+  ]
+}

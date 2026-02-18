@@ -2,7 +2,7 @@ package com.ref.aea.core.modifier;
 
 import appeng.api.stacks.GenericStack;
 import com.ref.aea.AEA;
-import com.ref.aea.api.modifier.PatternEncodingModifier;
+import com.ref.aea.api.client.PatternEncodingModifier;
 import com.ref.aea.config.AEAClientConfig;
 import java.util.List;
 import java.util.Optional;

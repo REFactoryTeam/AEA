@@ -8,7 +8,7 @@ public enum AEAButtonToolTips implements LocalizationEnum {
 
   private final String englishText;
 
-  private AEAButtonToolTips(String englishText) {
+  AEAButtonToolTips(String englishText) {
     this.englishText = englishText;
   }
 

@@ -1,0 +1,12 @@
+{
+  "parent":"ae2:item/part_base",
+  "loader": "forge:composite",
+  "children": {
+    "base_layer": {
+      "parent": "advanced_ae:item/adv_pattern_provider_part"
+    },
+    "overlay_layer": {
+      "parent": "aea:item/mirror_pattern_provider_part_overlay"
+    }
+  }
+}

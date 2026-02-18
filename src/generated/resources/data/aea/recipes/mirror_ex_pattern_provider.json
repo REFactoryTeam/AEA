@@ -1,0 +1,32 @@
+{
+  "type": "forge:conditional",
+  "recipes": [
+    {
+      "conditions": [
+        {
+          "type": "forge:mod_loaded",
+          "modid": "expatternprovider"
+        }
+      ],
+      "recipe": {
+        "type": "ae2:transform",
+        "circumstance": {
+          "type": "fluid",
+          "tag": "minecraft:water"
+        },
+        "ingredients": [
+          {
+            "item": "expatternprovider:ex_pattern_provider"
+          },
+          {
+            "item": "ae2:singularity"
+          }
+        ],
+        "result": {
+          "count": 4,
+          "item": "aea:mirror_ex_pattern_provider"
+        }
+      }
+    }
+  ]
+}

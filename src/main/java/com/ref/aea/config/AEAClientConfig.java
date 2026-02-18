@@ -1,7 +1,7 @@
 package com.ref.aea.config;
 
 import com.ref.aea.AEA;
-import com.ref.aea.api.modifier.PatternEncodingModifier;
+import com.ref.aea.api.client.PatternEncodingModifier;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;

@@ -1,11 +1,14 @@
-package com.ref.aea.api.modifier;
+package com.ref.aea.api.client;
 
 import appeng.api.stacks.GenericStack;
 import java.util.List;
 import java.util.Optional;
 import mezz.jei.api.gui.ingredient.IRecipeSlotsView;
 import net.minecraft.world.entity.player.Player;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 
+@OnlyIn(Dist.CLIENT)
 public interface PatternEncodingModifier<C> {
 
   default ModificationResult modify(
