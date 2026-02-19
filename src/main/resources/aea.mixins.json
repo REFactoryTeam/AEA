@@ -22,7 +22,9 @@
     "ae.recipe.InscriberRecipeCategoryMixin",
     "buildinggadgets2.PacketUpdateTemplateManagerAccessor",
     "buildinggadgets2.PacketUpdateTemplateManagerMixin",
-    "buildinggadgets2.TemplateManagerHandlerMixin"
+    "buildinggadgets2.TemplateManagerHandlerMixin",
+    "ftbultimine.FTBUltimineMixin",
+    "ftbultimine.PlatformMethodsImplMixin"
   ],
   "client": [
     "ae.AEBaseScreenMixin",

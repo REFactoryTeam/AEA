@@ -4,6 +4,7 @@
   "block.aea.mirror_ex_pattern_provider": "ME镜像扩展样板供应器",
   "block.aea.mirror_pattern_provider": "ME镜像样板供应器",
   "config.jade.plugin_aea.mirror_provider": "镜像信息",
+  "ftbultimine.server_settings.right_click_memory_card": "内存卡: 右键单击多个方块",
   "gui.aea.Blocked": "阻塞",
   "gui.aea.PatternTimes": "发配次数：%s",
   "gui.tooltips.aea.CycleProcessingInput": "轮换原料位置",

@@ -47,6 +47,10 @@ public class AEALangProvider extends LanguageProvider {
     this.addEnum(AEAToolTips.class);
 
     this.addJadeProvider(MirrorProvider.INSTANCE.ID, "Mirror Info");
+
+    this.add(
+        "ftbultimine.server_settings.right_click_memory_card",
+        "Memory Card: Right-Click multiple blocks");
   }
 
   public <T extends Enum<T> & LocalizationEnum> void addEnum(Class<T> localizedEnum) {
