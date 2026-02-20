@@ -19,6 +19,7 @@ import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.level.ItemLike;
 import net.minecraftforge.common.crafting.ConditionalRecipe;
 import net.minecraftforge.common.crafting.conditions.ModLoadedCondition;
+import net.minecraftforge.registries.ForgeRegistries;
 import org.jetbrains.annotations.NotNull;
 
 public class AEARecipeProvider extends RecipeProvider {
@@ -109,5 +110,9 @@ public class AEARecipeProvider extends RecipeProvider {
 
   public static Supplier<Ingredient> t(TagKey<Item> tag) {
     return () -> Ingredient.of(tag);
+  }
+
+  public static Supplier<Ingredient> i(String itemId) {
+    return () -> Ingredient.of(ForgeRegistries.ITEMS.getValue(ResourceLocation.parse(itemId)));
   }
 }

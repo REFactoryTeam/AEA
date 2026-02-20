@@ -13,7 +13,7 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @OnlyIn(Dist.CLIENT)
-@Mixin(value = CableBusColor.class, remap = false)
+@Mixin(value = CableBusColor.class)
 public class CableBusColorMixin {
   @Inject(method = "getColor", at = @At("HEAD"), cancellable = true)
   private void onGetColor(

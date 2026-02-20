@@ -1,0 +1,12 @@
+{
+  "values": [
+    {
+      "id": "advanced_ae:quantum_infusion_flowing",
+      "required": false
+    },
+    {
+      "id": "advanced_ae:quantum_infusion_source",
+      "required": false
+    }
+  ]
+}

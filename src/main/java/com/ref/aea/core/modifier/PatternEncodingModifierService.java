@@ -3,6 +3,9 @@ package com.ref.aea.core.modifier;
 import appeng.api.stacks.AEItemKey;
 import appeng.api.stacks.AEKey;
 import appeng.api.stacks.GenericStack;
+import appeng.core.sync.network.NetworkHandler;
+import appeng.core.sync.packets.InventoryActionPacket;
+import appeng.helpers.InventoryAction;
 import appeng.integration.modules.jei.GenericEntryStackHelper;
 import appeng.integration.modules.jeirei.EncodingHelper;
 import appeng.menu.me.common.GridInventoryEntry;
@@ -129,7 +132,8 @@ public class PatternEncodingModifierService {
           i < encodedInputs.size()
               ? GenericStack.wrapInItemStack(encodedInputs.get(i))
               : ItemStack.EMPTY;
-      slot.setFilterTo(stack);
+      NetworkHandler.instance()
+          .sendToServer(new InventoryActionPacket(InventoryAction.SET_FILTER, slot.index, stack));
     }
   }
 

@@ -13,6 +13,7 @@ import com.ref.aea.data.AEARecipeProvider;
 import com.ref.aea.integration.aae.mirror.*;
 import java.util.List;
 import net.minecraft.core.registries.Registries;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.Item;
@@ -21,12 +22,13 @@ import net.minecraft.world.level.material.Fluid;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.fml.DistExecutor;
 import net.minecraftforge.registries.RegistryObject;
-import net.pedroksl.advanced_ae.common.definitions.AAEBlocks;
-import net.pedroksl.advanced_ae.common.definitions.AAEFluids;
+import net.pedroksl.advanced_ae.AdvancedAE;
 
 public class AAEIntegration {
   public static final TagKey<Fluid> QUANTUM_INFUSION =
-      TagKey.create(Registries.FLUID, AAEFluids.QUANTUM_INFUSION.id());
+      TagKey.create(
+          Registries.FLUID,
+          ResourceLocation.fromNamespaceAndPath(AdvancedAE.MOD_ID, "quantum_infusion"));
 
   public static RegistryObject<MirrorAdvPatternProviderBlock<MirrorAdvPatternProviderEntity>>
       MIRROR_ADV_PATTERN_PROVIDER_BLOCK;
@@ -101,15 +103,15 @@ public class AAEIntegration {
     AEAFluidTagsProvider.FLUID_OPTIONAL_MAP.putAll(
         QUANTUM_INFUSION,
         List.of(
-            AAEFluids.QUANTUM_INFUSION.sourceRegistry().getKey().location(),
-            AAEFluids.QUANTUM_INFUSION.flowingRegistry().getKey().location()));
+            ResourceLocation.fromNamespaceAndPath(AdvancedAE.MOD_ID, "quantum_infusion_flowing"),
+            ResourceLocation.fromNamespaceAndPath(AdvancedAE.MOD_ID, "quantum_infusion_source")));
 
     AEARecipeProvider.addMutualConversionRecipes(
         MIRROR_ADV_PATTERN_PROVIDER_BLOCK,
         MIRROR_ADV_PATTERN_PROVIDER_PART,
         "advanced_ae",
         TransformCircumstance.fluid(QUANTUM_INFUSION),
-        AEARecipeProvider.i(AAEBlocks.SMALL_ADV_PATTERN_PROVIDER),
+        AEARecipeProvider.i("advanced_ae:small_adv_pattern_provider"),
         AEARecipeProvider.i(AEItems.SINGULARITY));
 
     AEARecipeProvider.addMutualConversionRecipes(
@@ -117,7 +119,7 @@ public class AAEIntegration {
         MIRROR_EX_ADV_PATTERN_PROVIDER_PART,
         "advanced_ae",
         TransformCircumstance.fluid(QUANTUM_INFUSION),
-        AEARecipeProvider.i(AAEBlocks.ADV_PATTERN_PROVIDER),
+        AEARecipeProvider.i("advanced_ae:adv_pattern_provider"),
         AEARecipeProvider.i(AEItems.SINGULARITY));
 
     DistExecutor.safeRunWhenOn(Dist.CLIENT, () -> AAEIntegrationClient::init);
