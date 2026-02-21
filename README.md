@@ -3,6 +3,7 @@
 **English** | [简体中文](README_zh_CN.md)
 
 </div>
+
 # [AEA]
 
 An Applied Energistics 2 (AE2) addon and Quality of Life (QoL) mod designed to enhance pattern encoding, improve crafting UI, and provide seamless integrations with other popular mods.
