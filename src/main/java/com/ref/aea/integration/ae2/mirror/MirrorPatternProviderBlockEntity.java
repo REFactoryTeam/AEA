@@ -6,13 +6,15 @@ import appeng.blockentity.crafting.PatternProviderBlockEntity;
 import appeng.helpers.patternprovider.PatternProviderLogic;
 import appeng.parts.crafting.PatternProviderPart;
 import com.ref.aea.api.mirror.IMirror;
+import com.ref.aea.api.pos.SidedGlobalPos;
 import com.ref.aea.integration.ae2.AE2Integration;
+import java.util.Collection;
 import java.util.Optional;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
-import org.jetbrains.annotations.Nullable;
+import org.jetbrains.annotations.NotNull;
 
 public class MirrorPatternProviderBlockEntity extends PatternProviderBlockEntity
     implements IMirror<PatternProviderLogic> {
@@ -44,13 +46,18 @@ public class MirrorPatternProviderBlockEntity extends PatternProviderBlockEntity
   }
 
   @Override
-  public void setSourcePos(@Nullable IMirror.SourcePos sourcePos) {
-    this.getLogic().setSourcePos(sourcePos);
+  public void addSidedGlobalPos(@NotNull SidedGlobalPos sourcePos) {
+    this.getLogic().addSidedGlobalPos(sourcePos);
   }
 
   @Override
-  public @Nullable SourcePos getSourcePos() {
-    return this.getLogic().getSourcePos();
+  public void clearSidedGlobalPos() {
+    this.getLogic().clearSidedGlobalPos();
+  }
+
+  @Override
+  public @NotNull Collection<SidedGlobalPos> getSidedGlobalPos() {
+    return this.getLogic().getSidedGlobalPos();
   }
 
   @Override

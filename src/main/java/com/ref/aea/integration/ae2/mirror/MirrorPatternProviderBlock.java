@@ -5,11 +5,9 @@ import appeng.block.crafting.PushDirection;
 import appeng.menu.locator.MenuLocators;
 import appeng.util.InteractionUtil;
 import appeng.util.Platform;
-import com.ref.aea.api.mirror.IMirror;
-import java.util.Optional;
+import com.ref.aea.api.mirror.IMirrorConnectionItem;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
@@ -65,35 +63,32 @@ public class MirrorPatternProviderBlock<T extends MirrorPatternProviderBlockEnti
       return InteractionResult.PASS;
     }
 
-    T be = this.getBlockEntity(level, pos);
-
-    if (heldItem != null && !heldItem.isEmpty()) {
-      if (InteractionUtil.canWrenchRotate(heldItem)) {
-        this.setSide(level, pos, hit.getDirection());
-        return InteractionResult.sidedSuccess(level.isClientSide);
-      }
-      CompoundTag tag = heldItem.getTag();
-      if (be != null && tag != null) {
-        Optional<InteractionResult> result =
-            IMirror.readSourceFromNBT(heldItem.getTag())
-                .map(
-                    sourcePos -> {
-                      if (!level.isClientSide) {
-                        be.getLogic().setSourcePos(sourcePos);
-                      }
-                      return InteractionResult.sidedSuccess(level.isClientSide);
-                    });
-        if (result.isPresent()) return result.get();
-      }
+    if (heldItem != null && !heldItem.isEmpty() && InteractionUtil.canWrenchRotate(heldItem)) {
+      this.setSide(level, pos, hit.getDirection());
+      return InteractionResult.sidedSuccess(level.isClientSide);
     }
 
+    T be = this.getBlockEntity(level, pos);
     if (be == null) {
       return InteractionResult.PASS;
+    }
+
+    if (heldItem != null
+        && !heldItem.isEmpty()
+        && heldItem.getItem() instanceof IMirrorConnectionItem mirrorItem) {
+      var optPos = mirrorItem.getSidedGlobalPosFormItemStack(heldItem);
+      if (optPos.isPresent()) {
+        if (!level.isClientSide) {
+          be.getLogic().addSidedGlobalPos(optPos.get());
+        }
+        return InteractionResult.sidedSuccess(level.isClientSide);
+      }
     }
 
     if (!level.isClientSide) {
       be.openMenu(p, MenuLocators.forBlockEntity(be));
     }
+
     return InteractionResult.sidedSuccess(level.isClientSide);
   }
 

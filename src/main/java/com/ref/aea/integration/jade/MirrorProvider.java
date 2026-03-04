@@ -4,6 +4,7 @@ import appeng.api.parts.IPartHost;
 import appeng.api.parts.SelectedPart;
 import com.ref.aea.AEA;
 import com.ref.aea.api.mirror.IMirror;
+import com.ref.aea.api.pos.SidedGlobalPos;
 import javax.annotation.Nullable;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
@@ -32,8 +33,7 @@ public enum MirrorProvider implements IBlockComponentProvider, IServerDataProvid
     CompoundTag mirrorsMap = serverData.getCompound(KEY_MIRROR_DATA);
     if (mirrorsMap.contains(targetKey, Tag.TAG_COMPOUND)) {
       CompoundTag sourceTag = mirrorsMap.getCompound(targetKey);
-      IMirror.readSourceFromNBT(sourceTag)
-          .ifPresent(sourcePos -> tooltip.add(IMirror.getToolTip(sourcePos)));
+      SidedGlobalPos.fromNbt(sourceTag).ifPresent(sourcePos -> tooltip.add(sourcePos.getToolTip()));
     }
   }
 
@@ -60,12 +60,9 @@ public enum MirrorProvider implements IBlockComponentProvider, IServerDataProvid
   }
 
   private void writeMirrorToMap(CompoundTag map, IMirror<?> mirror, String key) {
-    IMirror.SourcePos pos = mirror.getSourcePos();
-    if (pos != null) {
-      CompoundTag entryTag = new CompoundTag();
-      IMirror.writeSourceToNBT(entryTag, pos);
-      map.put(key, entryTag);
-    }
+    mirror
+        .getFirstSidedGlobalPos()
+        .ifPresent(sidedGlobalPos -> map.put(key, sidedGlobalPos.toNbt()));
   }
 
   @Nullable

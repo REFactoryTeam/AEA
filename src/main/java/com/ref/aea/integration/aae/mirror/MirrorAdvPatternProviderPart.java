@@ -12,7 +12,9 @@ import appeng.menu.locator.MenuLocators;
 import appeng.parts.PartModel;
 import com.ref.aea.AEA;
 import com.ref.aea.api.mirror.IMirror;
+import com.ref.aea.api.pos.SidedGlobalPos;
 import com.ref.aea.integration.aae.AAEIntegration;
+import java.util.Collection;
 import java.util.Optional;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.InteractionHand;
@@ -24,7 +26,7 @@ import net.pedroksl.advanced_ae.common.entities.SmallAdvPatternProviderEntity;
 import net.pedroksl.advanced_ae.common.logic.AdvPatternProviderLogic;
 import net.pedroksl.advanced_ae.common.parts.AdvPatternProviderPart;
 import net.pedroksl.advanced_ae.common.parts.SmallAdvPatternProviderPart;
-import org.jetbrains.annotations.Nullable;
+import org.jetbrains.annotations.NotNull;
 
 public class MirrorAdvPatternProviderPart extends AdvPatternProviderPart
     implements IMirror<AdvPatternProviderLogic> {
@@ -98,26 +100,26 @@ public class MirrorAdvPatternProviderPart extends AdvPatternProviderPart
   @Override
   public boolean onPartActivate(Player p, InteractionHand hand, Vec3 pos) {
     if (p.getCommandSenderWorld().isClientSide()) return true;
-    ItemStack stack = p.getItemInHand(hand);
-    if (stack.getTag() != null) {
-      Optional<IMirror.SourcePos> sourcePos = IMirror.readSourceFromNBT(stack.getTag());
-      if (sourcePos.isPresent()) {
-        this.getLogic().setSourcePos(sourcePos.get());
-        return true;
-      }
-    }
-    openMenu(p, MenuLocators.forPart(this));
+    SidedGlobalPos.fromNbt(p.getItemInHand(hand).getTag())
+        .ifPresentOrElse(
+            sourcePos -> this.getLogic().addSidedGlobalPos(sourcePos),
+            () -> openMenu(p, MenuLocators.forPart(this)));
     return true;
   }
 
   @Override
-  public void setSourcePos(@Nullable IMirror.SourcePos sourcePos) {
-    this.getLogic().setSourcePos(sourcePos);
+  public void addSidedGlobalPos(@NotNull SidedGlobalPos sourcePos) {
+    this.getLogic().addSidedGlobalPos(sourcePos);
   }
 
   @Override
-  public @Nullable IMirror.SourcePos getSourcePos() {
-    return this.getLogic().getSourcePos();
+  public void clearSidedGlobalPos() {
+    this.getLogic().clearSidedGlobalPos();
+  }
+
+  @Override
+  public @NotNull Collection<SidedGlobalPos> getSidedGlobalPos() {
+    return this.getLogic().getSidedGlobalPos();
   }
 
   @Override

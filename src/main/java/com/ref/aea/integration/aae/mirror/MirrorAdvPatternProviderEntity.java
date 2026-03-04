@@ -6,7 +6,9 @@ import appeng.menu.ISubMenu;
 import appeng.menu.MenuOpener;
 import appeng.menu.locator.MenuLocator;
 import com.ref.aea.api.mirror.IMirror;
+import com.ref.aea.api.pos.SidedGlobalPos;
 import com.ref.aea.integration.aae.AAEIntegration;
+import java.util.Collection;
 import java.util.Optional;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.player.Player;
@@ -18,7 +20,7 @@ import net.pedroksl.advanced_ae.common.entities.AdvPatternProviderEntity;
 import net.pedroksl.advanced_ae.common.entities.SmallAdvPatternProviderEntity;
 import net.pedroksl.advanced_ae.common.logic.AdvPatternProviderLogic;
 import net.pedroksl.advanced_ae.common.parts.SmallAdvPatternProviderPart;
-import org.jetbrains.annotations.Nullable;
+import org.jetbrains.annotations.NotNull;
 
 public class MirrorAdvPatternProviderEntity extends AdvPatternProviderEntity
     implements IMirror<AdvPatternProviderLogic> {
@@ -63,13 +65,18 @@ public class MirrorAdvPatternProviderEntity extends AdvPatternProviderEntity
   }
 
   @Override
-  public void setSourcePos(@Nullable IMirror.SourcePos sourcePos) {
-    this.getLogic().setSourcePos(sourcePos);
+  public void addSidedGlobalPos(@NotNull SidedGlobalPos sourcePos) {
+    this.getLogic().addSidedGlobalPos(sourcePos);
   }
 
   @Override
-  public @Nullable IMirror.SourcePos getSourcePos() {
-    return this.getLogic().getSourcePos();
+  public void clearSidedGlobalPos() {
+    this.getLogic().clearSidedGlobalPos();
+  }
+
+  @Override
+  public @NotNull Collection<SidedGlobalPos> getSidedGlobalPos() {
+    return this.getLogic().getSidedGlobalPos();
   }
 
   @Override

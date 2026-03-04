@@ -12,9 +12,8 @@ import com.ref.aea.api.mirror.IMirror;
 import com.ref.aea.api.mirror.IMirrorPatternService;
 import com.ref.aea.api.mixin.ae.crafting.mirror.IMixinAdvPatternProviderLogic;
 import com.ref.aea.api.mixin.ae.crafting.mirror.IMixinPatternProviderLogic;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.Optional;
+import com.ref.aea.api.pos.SidedGlobalPos;
+import java.util.*;
 import javax.annotation.Nullable;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.MinecraftServer;
@@ -24,11 +23,12 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraftforge.server.ServerLifecycleHooks;
 import net.pedroksl.advanced_ae.common.logic.AdvPatternProviderLogic;
 import net.pedroksl.advanced_ae.common.logic.AdvPatternProviderLogicHost;
+import org.jetbrains.annotations.NotNull;
 
 public class MirrorAdvPatternProviderLogic extends AdvPatternProviderLogic
     implements IMirror<AdvPatternProviderLogic> {
 
-  private SourcePos sourcePos;
+  @Nullable private SidedGlobalPos sourcePos;
 
   private final Class<? extends AdvPatternProviderLogicHost> targetPartClass;
   private final Class<? extends AdvPatternProviderLogicHost> targetBeClass;
@@ -47,21 +47,34 @@ public class MirrorAdvPatternProviderLogic extends AdvPatternProviderLogic
     mainNode.addService(IMirror.class, this);
   }
 
-  @Override
-  public void setSourcePos(@Nullable SourcePos sourcePos) {
-    this.sourcePos = sourcePos;
+  private void onSourceChanged() {
     IMixinPatternProviderLogic thisMixin = (IMixinPatternProviderLogic) this;
     IGridNode node = thisMixin.AEA$getMainNode().getNode();
+
     if (node != null) {
-      node.getGrid().getService(IMirrorPatternService.class).updateMirrorPosition(node, sourcePos);
+      node.getGrid()
+          .getService(IMirrorPatternService.class)
+          .updateMirrorPosition(node, this.sourcePos);
     }
     this.updateSource(null);
+    super.saveChanges();
   }
 
   @Override
-  @Nullable
-  public SourcePos getSourcePos() {
-    return sourcePos;
+  public void addSidedGlobalPos(@NotNull SidedGlobalPos pos) {
+    this.sourcePos = pos;
+    this.onSourceChanged();
+  }
+
+  @Override
+  public void clearSidedGlobalPos() {
+    this.sourcePos = null;
+    this.onSourceChanged();
+  }
+
+  @Override
+  public Optional<SidedGlobalPos> getFirstSidedGlobalPos() {
+    return Optional.ofNullable(sourcePos);
   }
 
   @Override
@@ -78,7 +91,7 @@ public class MirrorAdvPatternProviderLogic extends AdvPatternProviderLogic
     AdvPatternProviderLogic sourceLogic = null;
 
     if (be instanceof IPartHost iPartHost) {
-      IPart part = iPartHost.getPart(sourcePos.direction());
+      IPart part = iPartHost.getPart(sourcePos.direction().orElse(null));
       if (part != null && targetPartClass == part.getClass()) {
         sourceLogic = ((AdvPatternProviderLogicHost) part).getLogic();
       }
@@ -131,14 +144,12 @@ public class MirrorAdvPatternProviderLogic extends AdvPatternProviderLogic
 
   private void writeSourcePos(CompoundTag tag) {
     if (this.sourcePos != null) {
-      IMirror.writeSourceToNBT(tag, this.sourcePos);
+      this.sourcePos.toNbt(tag);
     }
   }
 
   private void readSourcePos(CompoundTag tag) {
-    if (tag.contains(NBT_SOURCE_POS)) {
-      IMirror.readSourceFromNBT(tag).ifPresent(pos -> this.sourcePos = pos);
-    }
+    this.sourcePos = SidedGlobalPos.fromNbt(tag).orElse(null);
   }
 
   @Override

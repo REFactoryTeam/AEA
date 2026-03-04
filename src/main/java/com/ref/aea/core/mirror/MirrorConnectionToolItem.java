@@ -1,18 +1,11 @@
 package com.ref.aea.core.mirror;
 
-import appeng.api.parts.IPartHost;
-import appeng.api.parts.SelectedPart;
-import com.ref.aea.api.client.ILevelRenderItem;
-import com.ref.aea.api.client.IRainbowRender;
-import com.ref.aea.api.mirror.IMirror;
+import com.ref.aea.api.mirror.IMirrorConnectionItem;
+import com.ref.aea.api.pos.SidedGlobalPos;
+import com.ref.aea.api.pos.client.ISidedGlobalPosRenderItem;
 import com.ref.aea.core.localization.AEAToolTips;
+import java.util.Collection;
 import java.util.List;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.screens.Screen;
-import net.minecraft.client.multiplayer.ClientLevel;
-import net.minecraft.core.Direction;
-import net.minecraft.core.GlobalPos;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
@@ -23,15 +16,13 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.entity.BlockEntity;
-import net.minecraft.world.phys.AABB;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.client.event.RenderLevelStageEvent;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-public class MirrorConnectionToolItem extends Item implements ILevelRenderItem {
+public class MirrorConnectionToolItem extends Item
+    implements ISidedGlobalPosRenderItem, IMirrorConnectionItem {
 
   public MirrorConnectionToolItem() {
     super(new Item.Properties().stacksTo(1));
@@ -43,28 +34,21 @@ public class MirrorConnectionToolItem extends Item implements ILevelRenderItem {
       @Nullable Level pLevel,
       @NotNull List<Component> pTooltipComponents,
       @NotNull TooltipFlag pIsAdvanced) {
-    var tag = pStack.getTag();
-    if (tag == null) return;
-    IMirror.readSourceFromNBT(tag)
-        .ifPresent((sourcePos) -> pTooltipComponents.add(IMirror.getToolTip(sourcePos)));
+    SidedGlobalPos.fromNbt(pStack.getTag())
+        .ifPresent((sourcePos) -> pTooltipComponents.add(sourcePos.getToolTip()));
   }
 
   @Override
   public @NotNull InteractionResultHolder<ItemStack> use(
-      @NotNull Level level, Player player, @NotNull InteractionHand hand) {
+      @NotNull Level level, @NotNull Player player, @NotNull InteractionHand hand) {
     ItemStack stack = player.getItemInHand(hand);
     if (player.isSecondaryUseActive()) {
-      CompoundTag tag = stack.getTag();
-      if (tag != null && tag.contains(IMirror.NBT_SOURCE_POS)) {
-        if (!level.isClientSide) {
-          tag.remove(IMirror.NBT_SOURCE_POS);
-          player.displayClientMessage(
-              Component.translatable(AEAToolTips.MirrorInfoClear.getTranslationKey()), true);
-        }
-        return InteractionResultHolder.sidedSuccess(stack, level.isClientSide);
+      if (!level.isClientSide && SidedGlobalPos.removeNbt(stack.getTag())) {
+        player.displayClientMessage(
+            Component.translatable(AEAToolTips.MirrorInfoClear.getTranslationKey()), true);
       }
+      return InteractionResultHolder.sidedSuccess(stack, level.isClientSide);
     }
-
     return InteractionResultHolder.pass(stack);
   }
 
@@ -73,35 +57,14 @@ public class MirrorConnectionToolItem extends Item implements ILevelRenderItem {
     if (!context.isSecondaryUseActive()) {
       return InteractionResult.PASS;
     }
-
     Level level = context.getLevel();
     Player player = context.getPlayer();
-    BlockEntity be = level.getBlockEntity(context.getClickedPos());
-    Direction targetSide = context.getClickedFace();
+    SidedGlobalPos sourceToRecord = this.getSidedGlobalPosFormUseOnContext(context);
 
-    IMirror.SourcePos sourceToRecord = null;
-
-    if (be instanceof IPartHost host) {
-      SelectedPart selectedPart = host.selectPartWorld(context.getClickLocation());
-      if (selectedPart.side != null) {
-        targetSide = selectedPart.side;
-      }
-      if (selectedPart.part instanceof IMirror<?> mirrorPart) {
-        sourceToRecord = mirrorPart.getSourcePos();
-      }
-    } else if (be instanceof IMirror<?> mirrorBlock) {
-      sourceToRecord = mirrorBlock.getSourcePos();
-    }
-
-    if (sourceToRecord == null) {
-      sourceToRecord =
-          new IMirror.SourcePos(
-              GlobalPos.of(level.dimension(), context.getClickedPos()), targetSide);
-    }
     if (!level.isClientSide) {
-      IMirror.writeSourceToNBT(context.getItemInHand().getOrCreateTag(), sourceToRecord);
+      sourceToRecord.toNbt(context.getItemInHand().getOrCreateTag());
       if (player != null) {
-        player.displayClientMessage(IMirror.getToolTip(sourceToRecord), true);
+        player.displayClientMessage(sourceToRecord.getToolTip(), true);
       }
     }
     return InteractionResult.sidedSuccess(level.isClientSide);
@@ -109,34 +72,7 @@ public class MirrorConnectionToolItem extends Item implements ILevelRenderItem {
 
   @Override
   @OnlyIn(Dist.CLIENT)
-  public void renderLevelOverlay(RenderLevelStageEvent event, ItemStack stack) {
-    if (event.getStage() != RenderLevelStageEvent.Stage.AFTER_PARTICLES || stack.getTag() == null) {
-      return;
-    }
-    IMirror.readSourceFromNBT(stack.getTag())
-        .ifPresent(
-            sourcePos -> {
-              ClientLevel clientLevel = Minecraft.getInstance().level;
-              if (clientLevel == null
-                  || !clientLevel.dimension().equals(sourcePos.globalPos().dimension())) {
-                return;
-              }
-              IRainbowRender.INSTANCE.drawWorldRainbowOutline(
-                  new AABB(sourcePos.globalPos().pos()).inflate(0.002D), event);
-              if (Screen.hasShiftDown()) {
-                IRainbowRender.INSTANCE.drawWorldRainbowFill(
-                    IRainbowRender.TOP_BOXES
-                        .get(sourcePos.direction())
-                        .move(sourcePos.globalPos().pos()),
-                    event,
-                    0.5f);
-                IRainbowRender.INSTANCE.drawWorldRainbowFill(
-                    IRainbowRender.BOTTOM_BOXES
-                        .get(sourcePos.direction())
-                        .move(sourcePos.globalPos().pos()),
-                    event,
-                    0.3f);
-              }
-            });
+  public @NotNull Collection<SidedGlobalPos> getSidedGlobalPos(ItemStack stack) {
+    return SidedGlobalPos.fromNbt(stack.getTag()).map(List::of).orElse(List.of());
   }
 }

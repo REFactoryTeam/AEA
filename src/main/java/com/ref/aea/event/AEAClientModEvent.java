@@ -3,7 +3,7 @@ package com.ref.aea.event;
 import appeng.core.definitions.AEItems;
 import com.ref.aea.AEA;
 import com.ref.aea.api.client.IRainbowRender;
-import com.ref.aea.api.mirror.IMirror;
+import com.ref.aea.api.pos.SidedGlobalPos;
 import com.ref.aea.core.definitions.AEAItems;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -104,8 +104,7 @@ public class AEAClientModEvent {
   }
 
   public static int getColorForTime(ItemStack stack, int tintIndex) {
-    var tag = stack.getTag();
-    if (tag != null && IMirror.readSourceFromNBT(tag).isPresent()) {
+    if (SidedGlobalPos.fromNbt(stack.getTag()).isPresent()) {
       return IRainbowRender.INSTANCE.getRainbowColor(System.currentTimeMillis(), 0.0f);
     }
     return -1;
