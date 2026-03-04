@@ -4,6 +4,7 @@
   "package": "com.ref.aea.mixin",
   "compatibilityLevel": "JAVA_8",
   "refmap": "aea.refmap.json",
+  "plugin": "com.ref.aea.mixin.AEAMixinConfigPlugin",
   "mixins": [
     "aae.AdvPatternProviderLogicMixin",
     "ae.crafting.blocked.CraftingCpuLogicMixin",

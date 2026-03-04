@@ -4,6 +4,7 @@ import appeng.api.networking.GridServices;
 import com.mojang.logging.LogUtils;
 import com.ref.aea.api.mirror.IMirrorPatternService;
 import com.ref.aea.config.AEAClientConfig;
+import com.ref.aea.config.AEACommonConfig;
 import com.ref.aea.config.AEAServerConfig;
 import com.ref.aea.core.definitions.AEABlockEntityType;
 import com.ref.aea.core.definitions.AEABlocks;
@@ -52,6 +53,7 @@ public class AEA {
 
     context.registerConfig(ModConfig.Type.CLIENT, AEAClientConfig.SPEC);
     context.registerConfig(ModConfig.Type.SERVER, AEAServerConfig.SPEC);
+    context.registerConfig(ModConfig.Type.COMMON, AEACommonConfig.SPEC);
 
     GridServices.register(IMirrorPatternService.class, MirrorPatternService.class);
   }
