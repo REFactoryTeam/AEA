@@ -6,6 +6,7 @@ import com.ref.aea.core.localization.AEAButtonToolTips;
 import com.ref.aea.core.localization.AEAGuiText;
 import com.ref.aea.core.localization.AEAToolTips;
 import com.ref.aea.integration.jade.MirrorProvider;
+import com.ref.aea.integration.jade.WirelessConnectionProvider;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Supplier;
@@ -47,6 +48,7 @@ public class AEALangProvider extends LanguageProvider {
     this.addEnum(AEAToolTips.class);
 
     this.addJadeProvider(MirrorProvider.INSTANCE.ID, "Mirror Info");
+    this.addJadeProvider(WirelessConnectionProvider.INSTANCE.ID, "Wireless Connection Info");
 
     this.add(
         "ftbultimine.server_settings.right_click_memory_card",

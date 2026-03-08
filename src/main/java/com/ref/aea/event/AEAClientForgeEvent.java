@@ -2,11 +2,15 @@ package com.ref.aea.event;
 
 import com.ref.aea.AEA;
 import com.ref.aea.api.client.ILevelRenderItem;
+import com.ref.aea.api.common.ICustomScrollBehavior;
+import com.ref.aea.network.AEANetwork;
+import com.ref.aea.network.C2SCustomScrollPacket;
 import net.minecraft.client.Minecraft;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
+import net.minecraftforge.client.event.InputEvent;
 import net.minecraftforge.client.event.RenderLevelStageEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
@@ -34,5 +38,21 @@ public class AEAClientForgeEvent {
     }
 
     mc.renderBuffers().bufferSource().endBatch();
+  }
+
+  @SubscribeEvent
+  public static void onMouseScroll(InputEvent.MouseScrollingEvent event) {
+    Player player = Minecraft.getInstance().player;
+    if (player == null) return;
+
+    ItemStack stack = player.getMainHandItem();
+    if (stack.getItem() instanceof ICustomScrollBehavior scrollable) {
+      if (scrollable.shouldTrigger(player)) {
+        double delta = event.getScrollDelta();
+        AEANetwork.INSTANCE.sendToServer(new C2SCustomScrollPacket(delta));
+        scrollable.onScroll(stack, player, delta);
+        event.setCanceled(true);
+      }
+    }
   }
 }

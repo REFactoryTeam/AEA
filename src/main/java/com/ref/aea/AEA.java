@@ -1,8 +1,6 @@
 package com.ref.aea;
 
-import appeng.api.networking.GridServices;
 import com.mojang.logging.LogUtils;
-import com.ref.aea.api.mirror.IMirrorPatternService;
 import com.ref.aea.config.AEAClientConfig;
 import com.ref.aea.config.AEACommonConfig;
 import com.ref.aea.config.AEAServerConfig;
@@ -10,9 +8,9 @@ import com.ref.aea.core.definitions.AEABlockEntityType;
 import com.ref.aea.core.definitions.AEABlocks;
 import com.ref.aea.core.definitions.AEAItems;
 import com.ref.aea.core.definitions.AEATab;
-import com.ref.aea.core.mirror.MirrorPatternService;
 import com.ref.aea.integration.aae.AAEIntegration;
 import com.ref.aea.integration.ae2.AE2Integration;
+import com.ref.aea.integration.aea.AEAIntegration;
 import com.ref.aea.integration.create.CreateIntegration;
 import com.ref.aea.integration.eae.EAEIntegration;
 import net.minecraftforge.fml.ModList;
@@ -33,6 +31,7 @@ public class AEA {
   public static boolean CREATE = ModList.get().isLoaded("create");
 
   public AEA(FMLJavaModLoadingContext context) {
+    AEAIntegration.init();
     if (AE2) {
       AE2Integration.init();
     }
@@ -54,7 +53,5 @@ public class AEA {
     context.registerConfig(ModConfig.Type.CLIENT, AEAClientConfig.SPEC);
     context.registerConfig(ModConfig.Type.SERVER, AEAServerConfig.SPEC);
     context.registerConfig(ModConfig.Type.COMMON, AEACommonConfig.SPEC);
-
-    GridServices.register(IMirrorPatternService.class, MirrorPatternService.class);
   }
 }

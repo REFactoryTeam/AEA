@@ -2,21 +2,24 @@ package com.ref.aea.api.pos.client;
 
 import com.ref.aea.api.client.IRainbowRender;
 import com.ref.aea.api.pos.SidedGlobalPos;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.phys.AABB;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.event.RenderLevelStageEvent;
+import org.jetbrains.annotations.NotNull;
 
 public interface ISidedGlobalPosRender {
   @OnlyIn(Dist.CLIENT)
-  default void renderGlobalPosInLevel(SidedGlobalPos pos, RenderLevelStageEvent event) {
+  default void renderGlobalPosInLevel(
+      @NotNull SidedGlobalPos pos, @NotNull RenderLevelStageEvent event, @NotNull ItemStack stack) {
     IRainbowRender.INSTANCE.drawWorldRainbowOutline(
         new AABB(pos.globalPos().pos()).inflate(0.002D), event);
   }
-  ;
 
   @OnlyIn(Dist.CLIENT)
-  default void renderDirectionInLevel(SidedGlobalPos pos, RenderLevelStageEvent event) {
+  default void renderDirectionInLevel(
+      @NotNull SidedGlobalPos pos, @NotNull RenderLevelStageEvent event, @NotNull ItemStack stack) {
     pos.direction()
         .ifPresent(
             direction -> {
@@ -28,5 +31,4 @@ public interface ISidedGlobalPosRender {
                   0.3f);
             });
   }
-  ;
 }

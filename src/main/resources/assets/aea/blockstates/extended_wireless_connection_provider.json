@@ -1,0 +1,7 @@
+{
+  "variants": {
+    "": {
+      "model": "aea:block/extended_wireless_connection_provider"
+    }
+  }
+}

@@ -1,0 +1,6 @@
+{
+  "parent": "item/handheld",
+  "textures": {
+    "layer0": "aea:item/advanced_wireless_connection_tool"
+  }
+}

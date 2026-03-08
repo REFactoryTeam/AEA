@@ -12,10 +12,12 @@ public class AEAJadePlugin implements IWailaPlugin {
   @Override
   public void register(IWailaCommonRegistration registration) {
     registration.registerBlockDataProvider(MirrorProvider.INSTANCE, BlockEntity.class);
+    registration.registerBlockDataProvider(WirelessConnectionProvider.INSTANCE, BlockEntity.class);
   }
 
   @Override
   public void registerClient(IWailaClientRegistration registration) {
     registration.registerBlockComponent(MirrorProvider.INSTANCE, Block.class);
+    registration.registerBlockComponent(WirelessConnectionProvider.INSTANCE, Block.class);
   }
 }
