@@ -1,6 +1,18 @@
 {
   "values": [
     {
+      "id": "aea:wireless_connection_provider",
+      "required": false
+    },
+    {
+      "id": "aea:extended_wireless_connection_provider",
+      "required": false
+    },
+    {
+      "id": "aea:advanced_wireless_connection_provider",
+      "required": false
+    },
+    {
       "id": "aea:mirror_pattern_provider",
       "required": false
     },

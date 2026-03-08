@@ -224,6 +224,8 @@ dependencies {
 	implementation fg.deobf("curse.maven:ex-pattern-provider-892005:7472662")
 	implementation fg.deobf("curse.maven:glodium-957920:5226922")
 
+	implementation fg.deobf("curse.maven:ae2-network-analyser-961856:5107131")
+
 	implementation fg.deobf("curse.maven:advancedae-1084104:7159779")
 	implementation fg.deobf("curse.maven:ae2addonlib-1366135:7159767")
 

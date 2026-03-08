@@ -5,6 +5,7 @@ import com.ref.aea.AEA;
 import com.ref.aea.api.client.IRainbowRender;
 import com.ref.aea.api.pos.SidedGlobalPos;
 import com.ref.aea.core.definitions.AEAItems;
+import com.ref.aea.integration.aea.AEAIntegration;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
@@ -86,7 +87,11 @@ public class AEAClientModEvent {
         AEItems.PROCESSING_PATTERN,
         AEItems.SMITHING_TABLE_PATTERN,
         AEItems.STONECUTTING_PATTERN);
-    event.register(AEAClientModEvent::getColorForTime, AEAItems.MIRROR_CONNECTION_TOOL.get());
+    event.register(
+        AEAClientModEvent::getColorForTime,
+        AEAItems.MIRROR_CONNECTION_TOOL.get(),
+        AEAIntegration.WIRELESS_CONNECTION_TOOL.get(),
+        AEAIntegration.ADVANCED_WIRELESS_CONNECTION_TOOL.get());
   }
 
   @SubscribeEvent

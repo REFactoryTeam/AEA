@@ -169,6 +169,53 @@ public final class RenderUtil implements IRainbowRender {
     RenderSystem.disableBlend();
   }
 
+  @Override
+  public void drawWorldRainbowLine(Vec3 v1, Vec3 v2, RenderLevelStageEvent event) {
+    RenderSystem.disableDepthTest();
+    RenderSystem.enableBlend();
+
+    PoseStack stack = event.getPoseStack();
+    Vec3 cameraPos = event.getCamera().getPosition();
+    MultiBufferSource.BufferSource bufferSource =
+        Minecraft.getInstance().renderBuffers().bufferSource();
+    VertexConsumer buffer = bufferSource.getBuffer(CustomRenderType.RAINBOW_LINES);
+
+    stack.pushPose();
+    stack.translate(-cameraPos.x, -cameraPos.y, -cameraPos.z);
+    Matrix4f matrix = stack.last().pose();
+
+    Vec3 delta = v2.subtract(v1);
+    Vec3 normal = delta.normalize();
+
+    float nx = (delta.lengthSqr() > 1e-6) ? (float) normal.x : 0f;
+    float ny = (delta.lengthSqr() > 1e-6) ? (float) normal.y : 1f;
+    float nz = (delta.lengthSqr() > 1e-6) ? (float) normal.z : 0f;
+
+    long time = System.currentTimeMillis();
+    int c1 = getRainbowColor(time, 0.0f);
+    int c2 = getRainbowColor(time, 0.5f);
+
+    addLine(
+        buffer,
+        matrix,
+        (float) v1.x,
+        (float) v1.y,
+        (float) v1.z,
+        (float) v2.x,
+        (float) v2.y,
+        (float) v2.z,
+        c1,
+        c2,
+        nx,
+        ny,
+        nz);
+
+    stack.popPose();
+    bufferSource.endBatch(CustomRenderType.RAINBOW_LINES);
+
+    RenderSystem.enableDepthTest();
+  }
+
   public int getRainbowColor(long time, float offset) {
     float hue = ((time % 3000L) / 3000.0f + offset) % 1.0f;
     return Mth.hsvToRgb(hue, 0.8f, 1.0f) | 0xFF000000;

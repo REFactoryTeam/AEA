@@ -3,9 +3,12 @@ package com.ref.aea.api.pos;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import com.ref.aea.core.localization.AEAToolTips;
+import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 import javax.annotation.Nullable;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.core.Direction;
 import net.minecraft.core.GlobalPos;
 import net.minecraft.nbt.CompoundTag;
@@ -14,6 +17,9 @@ import net.minecraft.nbt.Tag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.chat.Style;
+import net.minecraft.world.phys.Vec3;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 import org.jetbrains.annotations.NotNull;
 
 public record SidedGlobalPos(GlobalPos globalPos, Optional<Direction> direction) {
@@ -66,11 +72,17 @@ public record SidedGlobalPos(GlobalPos globalPos, Optional<Direction> direction)
     return false;
   }
 
-  public static void listToNbt(CompoundTag tag, List<SidedGlobalPos> positions) {
+  public static CompoundTag listToNbt(
+      @NotNull CompoundTag tag, Collection<SidedGlobalPos> positions) {
     LIST_CODEC
-        .encodeStart(NbtOps.INSTANCE, positions)
+        .encodeStart(NbtOps.INSTANCE, List.copyOf(positions))
         .result()
         .ifPresent(nbt -> tag.put(NBT_SIDED_GLOBAL_POS_LIST, nbt));
+    return tag;
+  }
+
+  public static CompoundTag listToNbt(Collection<SidedGlobalPos> positions) {
+    return listToNbt(new CompoundTag(), positions);
   }
 
   public static List<SidedGlobalPos> listFromNbt(CompoundTag tag) {
@@ -85,7 +97,7 @@ public record SidedGlobalPos(GlobalPos globalPos, Optional<Direction> direction)
 
   public static boolean removeListNbt(CompoundTag tag) {
     if (tag != null && tag.contains(NBT_SIDED_GLOBAL_POS_LIST, Tag.TAG_LIST)) {
-      tag.remove(SidedGlobalPos.NBT_SIDED_GLOBAL_POS);
+      tag.remove(SidedGlobalPos.NBT_SIDED_GLOBAL_POS_LIST);
       return true;
     }
     return false;
@@ -102,5 +114,42 @@ public record SidedGlobalPos(GlobalPos globalPos, Optional<Direction> direction)
             .withStyle(Style.EMPTY.withColor(9489145)),
         this.direction().orElse(null),
         this.globalPos().dimension().location());
+  }
+
+  /**
+   * Checks if this SidedGlobalPos matches another.
+   *
+   * <p>Matching logic: 1. {@link GlobalPos} (dimension and block position) must be identical. 2.
+   * Direction matching: - If this object's {@link #direction()} is empty ({@link
+   * Optional#empty()}), it acts as a wildcard, matching any direction (or lack thereof) of the
+   * other object. - If this object has a specific direction, the other object's direction must be
+   * exactly the same.
+   *
+   * @param other The other {@link SidedGlobalPos} to compare against.
+   * @return {@code true} if the positions match according to the logic, {@code false} otherwise.
+   */
+  public boolean is(@NotNull SidedGlobalPos other) {
+    if (!this.globalPos.equals(other.globalPos())) {
+      return false;
+    }
+    if (this.direction.isEmpty()) {
+      return true;
+    }
+    return this.direction.equals(other.direction());
+  }
+
+  public Vec3 getVec() {
+    Vec3 center = Vec3.atCenterOf(this.globalPos().pos());
+    return this.direction().map(dir -> center.add(new Vec3(dir.step()).scale(0.5))).orElse(center);
+  }
+
+  @OnlyIn(Dist.CLIENT)
+  public boolean isCurrentLevel() {
+    ClientLevel level = Minecraft.getInstance().level;
+    if (level != null) {
+      return level.dimension().location().equals(this.globalPos().dimension().location());
+    } else {
+      return false;
+    }
   }
 }

@@ -24,6 +24,12 @@ An Applied Energistics 2 (AE2) addon and Quality of Life (QoL) mod designed to e
 * **Extended Pattern Access Terminal (EAE):** Added a stylish rainbow border effect to the Extended Pattern Access Terminal UI.
 * **Quartz Cutting Knife Utility:** You can now use the Quartz Cutting Knife to quickly copy the name of an Item or Block to your clipboard.
 
+### 📡 Wireless Connectivity
+* **Wireless Connection Provider:** Wirelessly connects to any AE network node.
+* **Normal Version:** Functions as a single Dense Cable connection.
+* **Extended Version:** Provides 6 connections (one for each face).
+* **Advanced Version:** Per-channel connectivity; each channel acts as a full Dense Cable.
+
 ### 🤝 Mod Integrations
 * **Just Enough Items (JEI) Interaction:** Forward actions from JEI bookmarks directly to AE2 terminals. Clicking a JEI bookmark now behaves exactly like clicking the item inside the AE2 UI.
 * **Building Gadgets 2 Integration:** Effortlessly convert the required material list from a BG2 "Copy-Paste Tool" directly into an AE2 Processing Pattern.

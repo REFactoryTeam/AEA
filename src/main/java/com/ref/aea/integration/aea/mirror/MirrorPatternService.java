@@ -1,4 +1,4 @@
-package com.ref.aea.core.mirror;
+package com.ref.aea.integration.aea.mirror;
 
 import appeng.api.networking.IGridNode;
 import appeng.api.networking.IGridServiceProvider;
