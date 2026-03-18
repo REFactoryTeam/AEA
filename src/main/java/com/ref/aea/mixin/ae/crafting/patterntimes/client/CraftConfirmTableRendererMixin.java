@@ -5,6 +5,7 @@ import appeng.client.gui.me.crafting.CraftConfirmTableRenderer;
 import appeng.menu.me.crafting.CraftingPlanSummaryEntry;
 import com.ref.aea.api.mixin.ae.crafting.patterntimes.IMixinPatternTimesHolder;
 import com.ref.aea.core.localization.AEAGuiText;
+import com.ref.aea.util.FormatUtil;
 import java.util.Comparator;
 import java.util.List;
 import net.minecraft.network.chat.Component;
@@ -60,7 +61,7 @@ public class CraftConfirmTableRendererMixin {
       if (i > 0) {
         line.append(", ");
       }
-      line.append(Component.literal(entry.getWhat().formatAmount(patternTimes.get(i), format)));
+      line.append(Component.literal(FormatUtil.formatAmountFromAE(patternTimes.get(i), format)));
     }
     if (totalCount > maxlength) {
       line.append("...");
