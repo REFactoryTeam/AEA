@@ -2,7 +2,7 @@
   "render_type": "minecraft:cutout",
   "parent": "aea:block/tint_cube",
   "textures": {
-    "particle": "aea:block/mirror_pattern_provider",
+    "particle": "aea:block/mirror_pattern_provider_overlay",
     "down": "aea:block/mirror_pattern_provider_overlay",
     "up": "aea:block/mirror_pattern_provider_alternate_front_overlay",
     "north": "aea:block/mirror_pattern_provider_alternate_arrow_overlay",
