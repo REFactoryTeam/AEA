@@ -8,6 +8,7 @@ import com.ref.aea.core.definitions.AEABlockEntityType;
 import com.ref.aea.core.definitions.AEABlocks;
 import com.ref.aea.core.definitions.AEAItems;
 import com.ref.aea.core.definitions.AEATab;
+import com.ref.aea.event.common.AEAInitMenuTypes;
 import com.ref.aea.integration.aae.AAEIntegration;
 import com.ref.aea.integration.ae2.AE2Integration;
 import com.ref.aea.integration.aea.AEAIntegration;
@@ -49,6 +50,8 @@ public class AEA {
     AEABlocks.DR.register(context.getModEventBus());
     AEABlockEntityType.DR.register(context.getModEventBus());
     AEATab.DR.register(context.getModEventBus());
+
+    AEAInitMenuTypes.init();
 
     context.registerConfig(ModConfig.Type.CLIENT, AEAClientConfig.SPEC);
     context.registerConfig(ModConfig.Type.SERVER, AEAServerConfig.SPEC);

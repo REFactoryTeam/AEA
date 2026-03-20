@@ -1,10 +1,13 @@
 package com.ref.aea.event;
 
+import appeng.api.util.AEColor;
+import appeng.client.render.StaticItemColor;
 import appeng.core.definitions.AEItems;
 import com.ref.aea.AEA;
 import com.ref.aea.api.client.IRainbowRender;
 import com.ref.aea.api.pos.SidedGlobalPos;
 import com.ref.aea.core.definitions.AEAItems;
+import com.ref.aea.event.client.AEAInitScreens;
 import com.ref.aea.integration.aea.AEAIntegration;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -30,6 +33,7 @@ import net.minecraftforge.event.AddPackFindersEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.ModList;
 import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 
 @OnlyIn(Dist.CLIENT)
 @Mod.EventBusSubscriber(
@@ -39,6 +43,11 @@ import net.minecraftforge.fml.common.Mod;
 public class AEAClientModEvent {
 
   public static final List<Supplier<? extends Block>> colorBlocks = new ArrayList<>();
+
+  @SubscribeEvent
+  public static void clientSetup(FMLClientSetupEvent event) {
+    AEAInitScreens.init();
+  }
 
   @SubscribeEvent
   public static void onAddPackFinders(AddPackFindersEvent event) {
@@ -92,6 +101,8 @@ public class AEAClientModEvent {
         AEAItems.MIRROR_CONNECTION_TOOL.get(),
         AEAIntegration.WIRELESS_CONNECTION_TOOL.get(),
         AEAIntegration.ADVANCED_WIRELESS_CONNECTION_TOOL.get());
+    event.register(
+        new StaticItemColor(AEColor.TRANSPARENT), AEAIntegration.ADVANCED_TERMINAL.get());
   }
 
   @SubscribeEvent

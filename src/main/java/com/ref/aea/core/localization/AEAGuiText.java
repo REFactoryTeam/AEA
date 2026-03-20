@@ -6,7 +6,11 @@ import org.jetbrains.annotations.Nullable;
 
 public enum AEAGuiText implements LocalizationEnum {
   Blocked("Blocked"),
-  PatternTimes("Pattern Times: %s");
+  PatternTimes("Pattern Times: %s"),
+  AdvancedTerminal("Advanced Terminal"),
+  ProcessingMode("Processing Mode"),
+  CraftingMode("Crafting Mode"),
+  ;
 
   private final String root;
 

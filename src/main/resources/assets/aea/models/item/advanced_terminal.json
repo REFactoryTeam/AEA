@@ -1,0 +1,9 @@
+{
+  "parent": "ae2:item/display_base",
+  "textures": {
+    "front": "aea:part/advanced_terminal",
+    "front_bright": "aea:part/advanced_terminal_bright",
+    "front_medium": "aea:part/advanced_terminal_medium",
+    "front_dark": "aea:part/advanced_terminal_dark"
+  }
+}
