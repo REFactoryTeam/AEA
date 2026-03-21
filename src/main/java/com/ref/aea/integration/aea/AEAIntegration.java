@@ -1,15 +1,18 @@
 package com.ref.aea.integration.aea;
 
 import appeng.api.networking.GridServices;
+import appeng.items.parts.PartItem;
 import com.ref.aea.api.mirror.IMirrorPatternService;
 import com.ref.aea.core.definitions.AEABlockEntityType;
 import com.ref.aea.core.definitions.AEABlocks;
 import com.ref.aea.core.definitions.AEAItems;
 import com.ref.aea.data.AEABlockTagsProvider;
+import com.ref.aea.integration.aea.advancedterminal.AdvancedTerminalPart;
 import com.ref.aea.integration.aea.mirror.MirrorPatternService;
 import com.ref.aea.integration.aea.wireless.*;
 import java.util.List;
 import net.minecraft.tags.BlockTags;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.fml.DistExecutor;
@@ -38,6 +41,8 @@ public class AEAIntegration {
 
   public static RegistryObject<BlockEntityType<AdvancedWirelessConnectionProviderBlockEntity>>
       ADVANCED_WIRELESS_CONNECTION_PROVIDER_BE;
+
+  public static RegistryObject<PartItem<AdvancedTerminalPart>> ADVANCED_TERMINAL;
 
   public static void init() {
     WIRELESS_CONNECTION_TOOL =
@@ -90,6 +95,14 @@ public class AEAIntegration {
             AdvancedWirelessConnectionProviderBlockEntity.class,
             AdvancedWirelessConnectionProviderBlockEntity::new,
             ADVANCED_WIRELESS_CONNECTION_PROVIDER_BLOCK);
+
+    ADVANCED_TERMINAL =
+        AEAItems.createPart(
+            "advanced_terminal",
+            "ME Advanced Terminal",
+            new Item.Properties(),
+            AdvancedTerminalPart.class,
+            AdvancedTerminalPart::new);
 
     AEABlockTagsProvider.BLOCK_OPTIONAL_MAP.putAll(
         BlockTags.MINEABLE_WITH_PICKAXE,

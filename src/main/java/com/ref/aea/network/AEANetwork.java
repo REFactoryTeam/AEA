@@ -1,6 +1,9 @@
 package com.ref.aea.network;
 
 import com.ref.aea.AEA;
+import com.ref.aea.integration.aea.advancedterminal.AdvancedFillGridPacket;
+import com.ref.aea.integration.aea.advancedterminal.crafting.AdvancedConfirmAutoCraftPacket;
+import com.ref.aea.integration.aea.advancedterminal.crafting.AdvancedCraftConfirmPlanPacket;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.network.NetworkRegistry;
 import net.minecraftforge.network.simple.SimpleChannel;
@@ -23,5 +26,23 @@ public class AEANetwork {
         C2SCustomScrollPacket::encode,
         C2SCustomScrollPacket::decode,
         C2SCustomScrollPacket::handle);
+    INSTANCE.registerMessage(
+        packetId++,
+        AdvancedFillGridPacket.class,
+        AdvancedFillGridPacket::encode,
+        AdvancedFillGridPacket::decode,
+        AdvancedFillGridPacket::handle);
+    INSTANCE.registerMessage(
+        packetId++,
+        AdvancedConfirmAutoCraftPacket.class,
+        AdvancedConfirmAutoCraftPacket::encode,
+        AdvancedConfirmAutoCraftPacket::decode,
+        AdvancedConfirmAutoCraftPacket::handle);
+    INSTANCE.registerMessage(
+        packetId++,
+        AdvancedCraftConfirmPlanPacket.class,
+        AdvancedCraftConfirmPlanPacket::encode,
+        AdvancedCraftConfirmPlanPacket::decode,
+        AdvancedCraftConfirmPlanPacket::handle);
   }
 }

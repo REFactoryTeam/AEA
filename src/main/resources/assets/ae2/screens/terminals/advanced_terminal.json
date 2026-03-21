@@ -1,0 +1,113 @@
+{
+  "$schema": "../schema.json",
+  "includes": ["terminal.json"],
+  "text": {
+    "dialog_title": {
+      "text": {
+        "translate": "gui.ae2.Terminal"
+      },
+      "position": {
+        "left": 8,
+        "top": 6
+      }
+    },
+    "crafting_grid_title": {
+      "text": {
+        "translate": "gui.aea.AdvancedTerminal"
+      },
+      "position": {
+        "left": 8,
+        "bottom": 175
+      }
+    }
+  },
+  "slots": {
+    "CRAFTING_GRID": {
+      "left": 37,
+      "bottom": 154,
+      "grid": "BREAK_AFTER_3COLS"
+    },
+    "CRAFTING_RESULT": {
+      "left": 129,
+      "bottom": 136
+    },
+    "PROCESSING_INPUTS": {
+      "left": 8,
+      "bottom": 154,
+      "grid": "BREAK_AFTER_9COLS"
+    }
+  },
+  "terminalStyle": {
+    "header": {
+      "texture": "guis/advanced.png",
+      "srcRect": [0, 0, 195, 17]
+    },
+    "firstRow": {
+      "texture": "guis/advanced.png",
+      "srcRect": [0, 17, 195, 18]
+    },
+    "row": {
+      "texture": "guis/advanced.png",
+      "srcRect": [0, 35, 195, 18]
+    },
+    "lastRow": {
+      "texture": "guis/advanced.png",
+      "srcRect": [0, 53, 195, 18]
+    },
+    "bottom": {
+      "texture": "guis/advanced.png",
+      "srcRect": [0, 71, 195, 178]
+    }
+  },
+  "widgets": {
+    "modeTabButton0": {
+      "left": 173,
+      "bottom": 170,
+      "width": 20,
+      "height": 20
+    },
+    "modeTabButton1": {
+      "left": 173,
+      "bottom": 150,
+      "width": 20,
+      "height": 20
+    },
+    "modePanel0": {
+      "left": 9,
+      "bottom": 164
+    },
+    "modePanel1": {
+      "left": 9,
+      "bottom": 164
+    },
+    "clearCraftingBtn": {
+      "left": 92,
+      "bottom": 156
+    },
+    "clearCraftingToPlayerInvBtn": {
+      "left": 102,
+      "bottom": 156
+    },
+    "clearProcessingBtn": {
+      "left": 151,
+      "bottom": 167
+    },
+    "clearProcessingToPlayerInvBtn": {
+      "left": 161,
+      "bottom": 167
+    },
+    "substitutionsBtn": {
+      "left": 112,
+      "bottom": 156
+    },
+    "fluidSubstitutionsBtn": {
+      "left": 122,
+      "bottom": 156
+    },
+    "processingModeScrollbar": {
+      "left": -1,
+      "bottom": 154,
+      "height": 52
+    }
+  }
+}
