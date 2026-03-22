@@ -4,6 +4,7 @@ import appeng.block.AEBaseBlock;
 import appeng.block.AEBaseBlockItem;
 import com.ref.aea.AEA;
 import com.ref.aea.data.AEALangProvider;
+import com.ref.aea.data.loot.AEABlocksLoot;
 import java.util.function.Function;
 import java.util.function.Supplier;
 import net.minecraft.world.item.BlockItem;
@@ -21,7 +22,7 @@ public class AEABlocks {
 
   public static <T extends Block> RegistryObject<T> block(
       String id, String englishName, Supplier<T> blockSupplier) {
-    return block(id, englishName, blockSupplier, null, true);
+    return block(id, englishName, blockSupplier, null, true, false);
   }
 
   public static <T extends Block> RegistryObject<T> block(
@@ -29,11 +30,15 @@ public class AEABlocks {
       String englishName,
       Supplier<T> blockSupplier,
       @Nullable Function<Block, BlockItem> itemFactory,
-      boolean isCreativeModeTab) {
+      boolean isCreativeModeTab,
+      boolean isCustomLoot) {
     var deferredBlock = DR.register(id, blockSupplier);
     AEAItems.blockItem(
         id, englishName, () -> getBlockItem(id, itemFactory, deferredBlock), isCreativeModeTab);
     AEALangProvider.Blocks.put(deferredBlock, englishName);
+    if (!isCustomLoot) {
+      AEABlocksLoot.DROP_SELF.add(deferredBlock);
+    }
     return deferredBlock;
   }
 
