@@ -1,9 +1,11 @@
 package com.ref.aea.data;
 
 import appeng.core.definitions.AEItems;
+import appeng.core.definitions.AEParts;
 import appeng.recipes.transform.TransformCircumstance;
 import appeng.recipes.transform.TransformRecipeBuilder;
 import com.ref.aea.core.definitions.AEAItems;
+import com.ref.aea.integration.aea.AEAIntegration;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Consumer;
@@ -42,6 +44,12 @@ public class AEARecipeProvider extends RecipeProvider {
         .define('S', AEItems.SINGULARITY)
         .define('W', AEItems.WIRELESS_RECEIVER)
         .unlockedBy(getHasName(AEItems.SINGULARITY), has(AEItems.SINGULARITY))
+        .save(pWriter);
+
+    ShapelessRecipeBuilder.shapeless(RecipeCategory.MISC, AEAIntegration.ADVANCED_TERMINAL.get())
+        .requires(AEParts.CRAFTING_TERMINAL)
+        .requires(AEItems.CALCULATION_PROCESSOR)
+        .unlockedBy(getHasName(AEParts.CRAFTING_TERMINAL), has(AEParts.CRAFTING_TERMINAL))
         .save(pWriter);
   }
 

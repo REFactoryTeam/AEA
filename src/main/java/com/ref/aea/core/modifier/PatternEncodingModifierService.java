@@ -28,7 +28,7 @@ public class PatternEncodingModifierService {
 
   static Set<PatternEncodingModifier<?>> Modifiers = new HashSet<>();
 
-  static final Comparator<GridInventoryEntry> ENTRY_COMPARATOR =
+  public static final Comparator<GridInventoryEntry> ENTRY_COMPARATOR =
       Comparator.comparing(GridInventoryEntry::isCraftable)
           .thenComparing(PatternEncodingModifierService::isUndamaged)
           .thenComparing(GridInventoryEntry::getStoredAmount);

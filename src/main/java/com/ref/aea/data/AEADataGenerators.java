@@ -1,6 +1,7 @@
 package com.ref.aea.data;
 
 import com.ref.aea.AEA;
+import com.ref.aea.data.loot.AEALootTableProvider;
 import java.util.concurrent.CompletableFuture;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.data.DataGenerator;
@@ -21,6 +22,7 @@ public class AEADataGenerators {
     DataGenerator.PackGenerator pack = generator.getVanillaPack(true);
 
     generator.addProvider(event.includeClient(), new AEALangProvider(packOutput));
+    generator.addProvider(event.includeServer(), AEALootTableProvider.create(packOutput));
     var blockTagsProvider =
         pack.addProvider(c -> new AEABlockTagsProvider(c, lookupProvider, existingFileHelper));
     pack.addProvider(

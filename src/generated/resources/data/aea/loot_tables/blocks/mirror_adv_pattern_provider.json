@@ -1,0 +1,21 @@
+{
+  "type": "minecraft:block",
+  "pools": [
+    {
+      "bonus_rolls": 0.0,
+      "conditions": [
+        {
+          "condition": "minecraft:survives_explosion"
+        }
+      ],
+      "entries": [
+        {
+          "type": "minecraft:item",
+          "name": "aea:mirror_adv_pattern_provider"
+        }
+      ],
+      "rolls": 1.0
+    }
+  ],
+  "random_sequence": "aea:blocks/mirror_adv_pattern_provider"
+}
