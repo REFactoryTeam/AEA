@@ -15,6 +15,7 @@ import appeng.menu.SlotSemantics;
 import appeng.menu.guisync.GuiSync;
 import appeng.menu.implementations.MenuTypeBuilder;
 import appeng.menu.me.common.MEStorageMenu;
+import appeng.menu.me.items.CraftingTermMenu;
 import appeng.menu.slot.AppEngSlot;
 import appeng.menu.slot.CraftingMatrixSlot;
 import appeng.util.ConfigInventory;
@@ -23,7 +24,11 @@ import com.google.common.base.Preconditions;
 import com.ref.aea.integration.aea.advancedterminal.crafting.AdvancedCraftConfirmMenu;
 import it.unimi.dsi.fastutil.ints.IntArraySet;
 import it.unimi.dsi.fastutil.ints.IntSet;
+import it.unimi.dsi.fastutil.objects.Object2IntOpenHashMap;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.Container;
 import net.minecraft.world.entity.player.Inventory;
@@ -32,6 +37,7 @@ import net.minecraft.world.inventory.CraftingContainer;
 import net.minecraft.world.inventory.MenuType;
 import net.minecraft.world.inventory.TransientCraftingContainer;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.item.crafting.Recipe;
 import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.level.Level;
@@ -310,6 +316,88 @@ public class AdvancedTerminalMenu extends MEStorageMenu implements IMenuCrafting
     return stack;
   }
 
+  public CraftingTermMenu.MissingIngredientSlots findMissingIngredients(
+      Map<Integer, Ingredient> ingredients) {
+    Set<Integer> missingSlots = new HashSet<>();
+    Set<Integer> craftableSlots = new HashSet<>();
+
+    var reservedGridAmounts = new Object2IntOpenHashMap<>();
+    var playerItems = getPlayerInventory().items;
+    var reservedPlayerItems = new int[playerItems.size()];
+
+    for (var entry : ingredients.entrySet()) {
+      var ingredient = entry.getValue();
+
+      boolean found = false;
+      for (int i = 0; i < playerItems.size(); i++) {
+        if (isPlayerInventorySlotLocked(i)) {
+          continue;
+        }
+
+        var stack = playerItems.get(i);
+        if (stack.getCount() - reservedPlayerItems[i] > 0 && ingredient.test(stack)) {
+          reservedPlayerItems[i]++;
+          found = true;
+          break;
+        }
+      }
+
+      if (!found) {
+        if (hasIngredient(ingredient, reservedGridAmounts)) {
+          reservedGridAmounts.merge(ingredient, 1, Integer::sum);
+          found = true;
+        }
+      }
+
+      if (!found) {
+        for (var stack : ingredient.getItems()) {
+          if (isCraftable(stack)) {
+            craftableSlots.add(entry.getKey());
+            found = true;
+            break;
+          }
+        }
+      }
+
+      if (!found) {
+        missingSlots.add(entry.getKey());
+      }
+    }
+
+    return new CraftingTermMenu.MissingIngredientSlots(missingSlots, craftableSlots);
+  }
+
+  @Override
+  public boolean hasIngredient(
+      Ingredient ingredient, Object2IntOpenHashMap<Object> reservedAmounts) {
+    for (var slot : getSlots(SlotSemantics.CRAFTING_GRID)) {
+      var stackInSlot = slot.getItem();
+      if (!stackInSlot.isEmpty() && ingredient.test(stackInSlot)) {
+        var reservedAmount = reservedAmounts.getOrDefault(slot, 0);
+        if (stackInSlot.getCount() > reservedAmount) {
+          reservedAmounts.merge(slot, 1, Integer::sum);
+          return true;
+        }
+      }
+    }
+
+    return super.hasIngredient(ingredient, reservedAmounts);
+  }
+
+  protected boolean isCraftable(ItemStack itemStack) {
+    var clientRepo = getClientRepo();
+
+    if (clientRepo != null) {
+      for (var stack : clientRepo.getAllEntries()) {
+        if (AEItemKey.matches(stack.getWhat(), itemStack) && stack.isCraftable()) {
+          return true;
+        }
+      }
+    }
+
+    return false;
+  }
+
   public void startAdvancedAutoCrafting(
       List<AdvancedAutoCraftEntry> stacksToCraft, AdvancedTerminalMode mode) {
     AdvancedCraftConfirmMenu.openWithCraftingList(
@@ -317,7 +405,11 @@ public class AdvancedTerminalMenu extends MEStorageMenu implements IMenuCrafting
   }
 
   @Override
-  public void startAutoCrafting(List<AutoCraftEntry> toCraft) {}
+  public void startAutoCrafting(List<AutoCraftEntry> toCraft) {
+    this.startAdvancedAutoCrafting(
+        toCraft.stream().map(AdvancedAutoCraftEntry::fromAutoCraftEntry).toList(),
+        AdvancedTerminalMode.CRAFTING);
+  }
 
   @Override
   public InternalInventory getCraftingMatrix() {

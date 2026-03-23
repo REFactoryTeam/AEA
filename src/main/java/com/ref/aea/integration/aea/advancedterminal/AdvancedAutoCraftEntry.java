@@ -1,6 +1,8 @@
 package com.ref.aea.integration.aea.advancedterminal;
 
 import appeng.api.stacks.AEKey;
+import appeng.helpers.IMenuCraftingPacket;
+import it.unimi.dsi.fastutil.ints.IntOpenHashSet;
 import it.unimi.dsi.fastutil.ints.IntSet;
 
 /**
@@ -10,4 +12,10 @@ import it.unimi.dsi.fastutil.ints.IntSet;
  * @param amount The requested amount.
  * @param slot The slots in the grid associated with this crafting request.
  */
-public record AdvancedAutoCraftEntry(AEKey what, long amount, IntSet slot) {}
+public record AdvancedAutoCraftEntry(AEKey what, long amount, IntSet slot) {
+  public static AdvancedAutoCraftEntry fromAutoCraftEntry(
+      IMenuCraftingPacket.AutoCraftEntry entry) {
+    return new AdvancedAutoCraftEntry(
+        entry.what(), entry.slots().size(), new IntOpenHashSet(entry.slots()));
+  }
+}
