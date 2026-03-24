@@ -1,10 +1,10 @@
 package com.ref.aea.data;
 
+import appeng.core.definitions.AEBlocks;
 import appeng.core.definitions.AEItems;
 import appeng.core.definitions.AEParts;
 import appeng.recipes.transform.TransformCircumstance;
 import appeng.recipes.transform.TransformRecipeBuilder;
-import com.ref.aea.core.definitions.AEAItems;
 import com.ref.aea.integration.aea.AEAIntegration;
 import java.util.ArrayList;
 import java.util.List;
@@ -36,7 +36,7 @@ public class AEARecipeProvider extends RecipeProvider {
   protected void buildRecipes(@NotNull Consumer<FinishedRecipe> pWriter) {
     BUILD_RECIPES.forEach(consumer -> consumer.accept(pWriter));
 
-    ShapedRecipeBuilder.shaped(RecipeCategory.MISC, AEAItems.MIRROR_CONNECTION_TOOL.get(), 1)
+    ShapedRecipeBuilder.shaped(RecipeCategory.MISC, AEAIntegration.MIRROR_CONNECTION_TOOL.get(), 1)
         .pattern(" IW")
         .pattern("ISI")
         .pattern(" I ")
@@ -45,6 +45,56 @@ public class AEARecipeProvider extends RecipeProvider {
         .define('W', AEItems.WIRELESS_RECEIVER)
         .unlockedBy(getHasName(AEItems.SINGULARITY), has(AEItems.SINGULARITY))
         .save(pWriter);
+
+    ShapedRecipeBuilder.shaped(
+            RecipeCategory.MISC, AEAIntegration.WIRELESS_CONNECTION_TOOL.get(), 1)
+        .pattern("WI ")
+        .pattern("ISI")
+        .pattern(" I ")
+        .define('I', Items.IRON_INGOT)
+        .define('S', AEItems.SINGULARITY)
+        .define('W', AEItems.WIRELESS_RECEIVER)
+        .unlockedBy(getHasName(AEItems.SINGULARITY), has(AEItems.SINGULARITY))
+        .save(pWriter);
+
+    ShapedRecipeBuilder.shaped(
+            RecipeCategory.MISC, AEAIntegration.ADVANCED_WIRELESS_CONNECTION_TOOL.get(), 1)
+        .pattern(" S ")
+        .pattern("SWS")
+        .pattern(" S ")
+        .define('S', AEItems.SINGULARITY)
+        .define('W', AEAIntegration.WIRELESS_CONNECTION_TOOL.get())
+        .unlockedBy(
+            getHasName(AEAIntegration.WIRELESS_CONNECTION_TOOL.get()),
+            has(AEAIntegration.WIRELESS_CONNECTION_TOOL.get()))
+        .save(pWriter);
+
+    TransformRecipeBuilder.transform(
+        pWriter,
+        RecipeBuilder.getDefaultRecipeId(AEAIntegration.WIRELESS_CONNECTION_PROVIDER_BLOCK.get()),
+        AEAIntegration.WIRELESS_CONNECTION_PROVIDER_BLOCK.get(),
+        1,
+        TransformCircumstance.explosion(),
+        AEBlocks.QUANTUM_RING,
+        AEItems.SINGULARITY);
+
+    TransformRecipeBuilder.transform(
+        pWriter,
+        RecipeBuilder.getDefaultRecipeId(
+            AEAIntegration.EXTENDED_WIRELESS_CONNECTION_PROVIDER_BLOCK.get()),
+        AEAIntegration.EXTENDED_WIRELESS_CONNECTION_PROVIDER_BLOCK.get(),
+        1,
+        TransformCircumstance.explosion(),
+        AEAIntegration.WIRELESS_CONNECTION_PROVIDER_BLOCK.get());
+
+    TransformRecipeBuilder.transform(
+        pWriter,
+        RecipeBuilder.getDefaultRecipeId(
+            AEAIntegration.ADVANCED_WIRELESS_CONNECTION_PROVIDER_BLOCK.get()),
+        AEAIntegration.ADVANCED_WIRELESS_CONNECTION_PROVIDER_BLOCK.get(),
+        1,
+        TransformCircumstance.explosion(),
+        AEAIntegration.EXTENDED_WIRELESS_CONNECTION_PROVIDER_BLOCK.get());
 
     ShapelessRecipeBuilder.shapeless(RecipeCategory.MISC, AEAIntegration.ADVANCED_TERMINAL.get())
         .requires(AEParts.CRAFTING_TERMINAL)

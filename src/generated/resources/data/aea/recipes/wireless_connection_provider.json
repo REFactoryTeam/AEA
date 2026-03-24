@@ -1,0 +1,17 @@
+{
+  "type": "ae2:transform",
+  "circumstance": {
+    "type": "explosion"
+  },
+  "ingredients": [
+    {
+      "item": "ae2:quantum_ring"
+    },
+    {
+      "item": "ae2:singularity"
+    }
+  ],
+  "result": {
+    "item": "aea:wireless_connection_provider"
+  }
+}

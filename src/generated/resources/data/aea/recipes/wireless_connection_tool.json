@@ -1,0 +1,24 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "I": {
+      "item": "minecraft:iron_ingot"
+    },
+    "S": {
+      "item": "ae2:singularity"
+    },
+    "W": {
+      "item": "ae2:wireless_receiver"
+    }
+  },
+  "pattern": [
+    "WI ",
+    "ISI",
+    " I "
+  ],
+  "result": {
+    "item": "aea:wireless_connection_tool"
+  },
+  "show_notification": true
+}

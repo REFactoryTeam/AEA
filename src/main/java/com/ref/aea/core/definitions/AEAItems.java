@@ -7,7 +7,6 @@ import appeng.items.parts.PartItem;
 import appeng.items.parts.PartModelsHelper;
 import com.ref.aea.AEA;
 import com.ref.aea.data.AEALangProvider;
-import com.ref.aea.integration.aea.mirror.MirrorConnectionToolItem;
 import java.util.function.Function;
 import java.util.function.Supplier;
 import net.minecraft.world.item.Item;
@@ -18,9 +17,6 @@ import net.minecraftforge.registries.RegistryObject;
 public class AEAItems {
   public static final DeferredRegister<Item> DR =
       DeferredRegister.create(ForgeRegistries.ITEMS, AEA.MOD_ID);
-
-  public static final RegistryObject<MirrorConnectionToolItem> MIRROR_CONNECTION_TOOL =
-      item("mirror_connection_tool", "Mirror Connection Tool", MirrorConnectionToolItem::new);
 
   public static <T extends IPart> RegistryObject<PartItem<T>> createPart(
       String id,
