@@ -69,37 +69,54 @@ public class AdvancedProcessingRecipeTransferHandler
       menu.setMode(AdvancedTerminalMode.PROCESSING);
     }
 
+    InventoryLookup lookup = new InventoryLookup();
+
+    populateLookup(menu, player, lookup);
+
+    RecipeMatchResult result = matchRecipeInputs(inputs, lookup);
+
+    if (result.missingIndices().size() == inputs.size() && !inputs.isEmpty()) {
+      return helper.createUserErrorForMissingSlots(
+          ItemModText.NO_ITEMS.text(), display.getSlotViews(RecipeIngredientRole.INPUT));
+    }
+
     boolean craftMissing = Screen.hasControlDown();
+    if (doTransfer) {
+      AEANetwork.INSTANCE.sendToServer(
+          new AdvancedFillProcessingGridPacket(result.exactRequests(), craftMissing));
+      return null;
+    }
 
-    List<GenericStack> exactRequests = new ArrayList<>();
-    Set<Integer> missingIndices = new HashSet<>();
-    Set<Integer> craftableIndices = new HashSet<>();
+    if (!result.missingIndices().isEmpty() || !result.craftableIndices().isEmpty()) {
+      int color =
+          !result.missingIndices().isEmpty() ? ORANGE_PLUS_BUTTON_COLOR : BLUE_PLUS_BUTTON_COLOR;
+      return new ErrorRenderer(
+          result.missingIndices(), result.craftableIndices(), craftMissing, color);
+    }
 
-    Map<AEKey, Long> availableCounts = new HashMap<>();
-    Set<AEKey> craftableKeys = new HashSet<>();
+    return null;
+  }
 
-    Map<Item, Set<AEItemKey>> availableItemsMap = new HashMap<>();
-    Map<Item, Set<AEItemKey>> craftableItemsMap = new HashMap<>();
-
+  private void populateLookup(AdvancedTerminalMenu menu, Player player, InventoryLookup lookup) {
     if (menu.getClientRepo() != null) {
       for (GridInventoryEntry entry : menu.getClientRepo().getAllEntries()) {
         AEKey key = entry.getWhat();
         if (entry.getStoredAmount() > 0) {
-          availableCounts.put(key, entry.getStoredAmount());
-          if (key instanceof AEItemKey itemKey) {
-            availableItemsMap.computeIfAbsent(itemKey.getItem(), k -> new HashSet<>()).add(itemKey);
-          }
+          lookup.addAvailable(key, entry.getStoredAmount());
         }
         if (entry.isCraftable()) {
-          craftableKeys.add(key);
-          if (key instanceof AEItemKey itemKey) {
-            craftableItemsMap.computeIfAbsent(itemKey.getItem(), k -> new HashSet<>()).add(itemKey);
-          }
+          lookup.addCraftable(key);
         }
       }
     }
+    countPlayerInventory(player, lookup.availableCounts, lookup.availableItemsMap);
+  }
 
-    for (int i = 0; i < player.getInventory().getContainerSize(); i++) {
+  public void countPlayerInventory(
+      Player player,
+      Map<AEKey, Long> availableCounts,
+      Map<Item, Set<AEItemKey>> availableItemsMap) {
+    for (int i = 0; i < player.getInventory().items.size(); i++) {
       var stack = player.getInventory().getItem(i);
       if (!stack.isEmpty()) {
         AEItemKey key = AEItemKey.of(stack);
@@ -109,98 +126,121 @@ public class AdvancedProcessingRecipeTransferHandler
         }
       }
     }
+  }
+
+  private RecipeMatchResult matchRecipeInputs(
+      List<List<GenericStack>> inputs, InventoryLookup lookup) {
+    List<GenericStack> exactRequests = new ArrayList<>();
+    Set<Integer> missingIndices = new HashSet<>();
+    Set<Integer> craftableIndices = new HashSet<>();
 
     for (int i = 0; i < inputs.size(); i++) {
       List<GenericStack> alternatives = inputs.get(i);
       if (alternatives.isEmpty()) continue;
-      GenericStack chosenExact = null;
-      long neededAmount = alternatives.get(0).amount();
 
-      for (GenericStack alt : alternatives) {
-        if (availableCounts.getOrDefault(alt.what(), 0L) >= neededAmount) {
-          chosenExact = new GenericStack(alt.what(), neededAmount);
-          availableCounts.put(alt.what(), availableCounts.get(alt.what()) - neededAmount);
-          break;
-        }
-      }
+      GenericStack match = findBestMatch(alternatives, lookup);
 
-      if (chosenExact == null) {
-        for (GenericStack alt : alternatives) {
-          if (alt.what() instanceof AEItemKey altKey) {
-            Set<AEItemKey> candidates =
-                availableItemsMap.getOrDefault(altKey.getItem(), Collections.emptySet());
-            ItemStack altStack = altKey.toStack();
-            for (AEItemKey candidate : candidates) {
-              if (availableCounts.getOrDefault(candidate, 0L) >= neededAmount) {
-                if (stackHelper.isEquivalent(
-                    candidate.toStack(), altStack, UidContext.Ingredient)) {
-                  chosenExact = new GenericStack(candidate, neededAmount);
-                  availableCounts.put(candidate, availableCounts.get(candidate) - neededAmount);
-                  break;
-                }
-              }
-            }
-            if (chosenExact != null) break;
-          }
-        }
-      }
-
-      if (chosenExact == null) {
-        for (GenericStack alt : alternatives) {
-          if (craftableKeys.contains(alt.what())) {
-            chosenExact = new GenericStack(alt.what(), neededAmount);
-            craftableIndices.add(i);
-            break;
-          }
-        }
-      }
-
-      if (chosenExact == null) {
-        for (GenericStack alt : alternatives) {
-          if (alt.what() instanceof AEItemKey altKey) {
-            Set<AEItemKey> candidates =
-                craftableItemsMap.getOrDefault(altKey.getItem(), Collections.emptySet());
-            ItemStack altStack = altKey.toStack();
-            for (AEItemKey candidate : candidates) {
-              if (stackHelper.isEquivalent(candidate.toStack(), altStack, UidContext.Ingredient)) {
-                chosenExact = new GenericStack(candidate, neededAmount);
-                craftableIndices.add(i);
-                break;
-              }
-            }
-            if (chosenExact != null) break;
-          }
-        }
-      }
-
-      if (chosenExact == null) {
-        chosenExact = new GenericStack(alternatives.get(0).what(), neededAmount);
+      if (match == null) {
+        long amount = alternatives.get(0).amount();
+        exactRequests.add(new GenericStack(alternatives.get(0).what(), amount));
         missingIndices.add(i);
+      } else {
+        exactRequests.add(match);
+        if (lookup.isLastMatchCraftable) {
+          craftableIndices.add(i);
+        }
       }
+    }
+    return new RecipeMatchResult(exactRequests, missingIndices, craftableIndices);
+  }
 
-      exactRequests.add(chosenExact);
+  private GenericStack findBestMatch(List<GenericStack> alternatives, InventoryLookup lookup) {
+    lookup.isLastMatchCraftable = false;
+    long neededAmount = alternatives.get(0).amount();
+
+    for (GenericStack alt : alternatives) {
+      if (lookup.availableCounts.getOrDefault(alt.what(), 0L) >= neededAmount) {
+        lookup.consumeAvailable(alt.what(), neededAmount);
+        return new GenericStack(alt.what(), neededAmount);
+      }
     }
 
-    if (missingIndices.size() == inputs.size() && !inputs.isEmpty()) {
-      return helper.createUserErrorForMissingSlots(
-          ItemModText.NO_ITEMS.text(), display.getSlotViews(RecipeIngredientRole.INPUT));
+    for (GenericStack alt : alternatives) {
+      if (alt.what() instanceof AEItemKey altKey) {
+        AEItemKey found =
+            findEquivalent(altKey, lookup.availableItemsMap, lookup.availableCounts, neededAmount);
+        if (found != null) {
+          lookup.consumeAvailable(found, neededAmount);
+          return new GenericStack(found, neededAmount);
+        }
+      }
     }
 
-    if (doTransfer) {
-      AEANetwork.INSTANCE.sendToServer(
-          new AdvancedFillProcessingGridPacket(exactRequests, craftMissing));
-      return null;
+    for (GenericStack alt : alternatives) {
+      if (lookup.craftableKeys.contains(alt.what())) {
+        lookup.isLastMatchCraftable = true;
+        return new GenericStack(alt.what(), neededAmount);
+      }
     }
 
-    if (!missingIndices.isEmpty() || !craftableIndices.isEmpty()) {
-      int color = !missingIndices.isEmpty() ? ORANGE_PLUS_BUTTON_COLOR : BLUE_PLUS_BUTTON_COLOR;
-      return new ErrorRenderer(missingIndices, craftableIndices, craftMissing, color);
+    for (GenericStack alt : alternatives) {
+      if (alt.what() instanceof AEItemKey altKey) {
+        AEItemKey found = findEquivalent(altKey, lookup.craftableItemsMap, null, 0);
+        if (found != null) {
+          lookup.isLastMatchCraftable = true;
+          return new GenericStack(found, neededAmount);
+        }
+      }
     }
 
     return null;
   }
 
-  private record ErrorRenderer(
+  public AEItemKey findEquivalent(
+      AEItemKey target, Map<Item, Set<AEItemKey>> pool, Map<AEKey, Long> counts, long amount) {
+    Set<AEItemKey> candidates = pool.getOrDefault(target.getItem(), Collections.emptySet());
+    ItemStack targetStack = target.toStack();
+    for (AEItemKey candidate : candidates) {
+      if (counts != null && counts.getOrDefault(candidate, 0L) < amount) continue;
+      if (stackHelper.isEquivalent(candidate.toStack(), targetStack, UidContext.Ingredient)) {
+        return candidate;
+      }
+    }
+    return null;
+  }
+
+  public static class InventoryLookup {
+    public final Map<AEKey, Long> availableCounts = new HashMap<>();
+    public final Set<AEKey> craftableKeys = new HashSet<>();
+    public final Map<Item, Set<AEItemKey>> availableItemsMap = new HashMap<>();
+    public final Map<Item, Set<AEItemKey>> craftableItemsMap = new HashMap<>();
+    public boolean isLastMatchCraftable = false;
+
+    public void addAvailable(AEKey key, long amount) {
+      availableCounts.put(key, amount);
+      if (key instanceof AEItemKey itemKey) {
+        availableItemsMap.computeIfAbsent(itemKey.getItem(), k -> new HashSet<>()).add(itemKey);
+      }
+    }
+
+    public void addCraftable(AEKey key) {
+      craftableKeys.add(key);
+      if (key instanceof AEItemKey itemKey) {
+        craftableItemsMap.computeIfAbsent(itemKey.getItem(), k -> new HashSet<>()).add(itemKey);
+      }
+    }
+
+    public void consumeAvailable(AEKey key, long amount) {
+      availableCounts.put(key, availableCounts.get(key) - amount);
+    }
+  }
+
+  public record RecipeMatchResult(
+      List<GenericStack> exactRequests,
+      Set<Integer> missingIndices,
+      Set<Integer> craftableIndices) {}
+
+  public record ErrorRenderer(
       Set<Integer> missing, Set<Integer> craftable, boolean craftMissing, int color)
       implements IRecipeTransferError {
     @Override

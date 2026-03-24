@@ -1,6 +1,7 @@
 package com.ref.aea.core.definitions;
 
 import com.ref.aea.AEA;
+import com.ref.aea.integration.aea.AEAIntegration;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -33,7 +34,7 @@ public class AEATab {
           () ->
               CreativeModeTab.builder()
                   .title(getName())
-                  .icon(() -> AEAItems.MIRROR_CONNECTION_TOOL.get().getDefaultInstance())
+                  .icon(() -> AEAIntegration.MIRROR_CONNECTION_TOOL.get().getDefaultInstance())
                   .displayItems(AEATab::Add)
                   .build());
 

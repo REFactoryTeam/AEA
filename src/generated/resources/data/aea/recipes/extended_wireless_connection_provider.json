@@ -1,0 +1,14 @@
+{
+  "type": "ae2:transform",
+  "circumstance": {
+    "type": "explosion"
+  },
+  "ingredients": [
+    {
+      "item": "aea:wireless_connection_provider"
+    }
+  ],
+  "result": {
+    "item": "aea:extended_wireless_connection_provider"
+  }
+}

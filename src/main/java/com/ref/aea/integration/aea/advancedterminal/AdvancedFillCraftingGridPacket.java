@@ -1,6 +1,7 @@
 package com.ref.aea.integration.aea.advancedterminal;
 
 import appeng.api.config.FuzzyMode;
+import appeng.api.networking.IGridNode;
 import appeng.api.networking.crafting.ICraftingService;
 import appeng.api.stacks.AEItemKey;
 import appeng.api.stacks.KeyCounter;
@@ -70,83 +71,90 @@ public class AdvancedFillCraftingGridPacket {
           var node = cct.getNetworkNode();
           if (node == null) return;
 
-          var grid = node.getGrid();
-          var storageService = grid.getStorageService();
-          var energy = grid.getEnergyService();
-          var craftMatrix = cct.getCraftingMatrix();
-          var storage = storageService.getInventory();
-          var cachedStorage = storageService.getCachedInventory();
-          var filter = ViewCellItem.createItemFilter(cct.getViewCells());
-          var ingredients = getDesiredIngredients(msg, player);
-          var craftingService = grid.getCraftingService();
-          var toAutoCraft = new LinkedHashMap<AEItemKey, List<Integer>>();
-          boolean touchedGridStorage = false;
-
-          for (int x = 0; x < craftMatrix.size(); x++) {
-            var currentItem = craftMatrix.getStackInSlot(x);
-            var ingredient = ingredients.get(x);
-
-            if (!currentItem.isEmpty()) {
-              if (ingredient.test(currentItem)) continue;
-              var in = AEItemKey.of(currentItem);
-              var inserted =
-                  StorageHelper.poweredInsert(
-                      energy, storage, in, currentItem.getCount(), cct.getActionSource());
-              if (inserted > 0) touchedGridStorage = true;
-              if (inserted < currentItem.getCount()) {
-                currentItem = currentItem.copy();
-                currentItem.shrink((int) inserted);
-              } else {
-                currentItem = ItemStack.EMPTY;
-              }
-              player.getInventory().add(currentItem);
-              craftMatrix.setItemDirect(x, currentItem.isEmpty() ? ItemStack.EMPTY : currentItem);
-            }
-
-            if (ingredient.isEmpty()) continue;
-
-            if (currentItem.isEmpty()) {
-              var request = findBestMatchingItemStack(ingredient, filter, cachedStorage);
-              for (var what : request) {
-                var extracted =
-                    StorageHelper.poweredExtraction(
-                        energy, storage, what, 1, cct.getActionSource());
-                if (extracted > 0) {
-                  touchedGridStorage = true;
-                  currentItem = what.toStack(Ints.saturatedCast(extracted));
-                  break;
-                }
-              }
-            }
-
-            if (currentItem.isEmpty()) {
-              currentItem = takeIngredientFromPlayer(cct, player, ingredient);
-            }
-
-            craftMatrix.setItemDirect(x, currentItem);
-
-            if (currentItem.isEmpty() && msg.craftMissing) {
-              int slot = x;
-              findCraftableKey(ingredient, craftingService)
-                  .ifPresent(
-                      key -> {
-                        toAutoCraft.computeIfAbsent(key, k -> new ArrayList<>()).add(slot);
-                      });
-            }
-          }
-
-          player.containerMenu.slotsChanged(craftMatrix.toContainer());
-
-          if (!toAutoCraft.isEmpty()) {
-            if (touchedGridStorage) storageService.invalidateCache();
-            var stacks =
-                toAutoCraft.entrySet().stream()
-                    .map(e -> new IMenuCraftingPacket.AutoCraftEntry(e.getKey(), e.getValue()))
-                    .toList();
-            cct.startAutoCrafting(stacks);
-          }
+          transfer(msg, cct, node, player);
         });
     ctx.setPacketHandled(true);
+  }
+
+  private static void transfer(
+      AdvancedFillCraftingGridPacket msg,
+      IMenuCraftingPacket cct,
+      IGridNode node,
+      ServerPlayer player) {
+    var grid = node.getGrid();
+    var storageService = grid.getStorageService();
+    var energy = grid.getEnergyService();
+    var craftMatrix = cct.getCraftingMatrix();
+    var storage = storageService.getInventory();
+    var cachedStorage = storageService.getCachedInventory();
+    var filter = ViewCellItem.createItemFilter(cct.getViewCells());
+    var ingredients = getDesiredIngredients(msg, player);
+    var craftingService = grid.getCraftingService();
+    var toAutoCraft = new LinkedHashMap<AEItemKey, List<Integer>>();
+    boolean touchedGridStorage = false;
+
+    for (int x = 0; x < craftMatrix.size(); x++) {
+      var currentItem = craftMatrix.getStackInSlot(x);
+      var ingredient = ingredients.get(x);
+
+      if (!currentItem.isEmpty()) {
+        if (ingredient.test(currentItem)) continue;
+        var in = AEItemKey.of(currentItem);
+        var inserted =
+            StorageHelper.poweredInsert(
+                energy, storage, in, currentItem.getCount(), cct.getActionSource());
+        if (inserted > 0) touchedGridStorage = true;
+        if (inserted < currentItem.getCount()) {
+          currentItem = currentItem.copy();
+          currentItem.shrink((int) inserted);
+        } else {
+          currentItem = ItemStack.EMPTY;
+        }
+        player.getInventory().add(currentItem);
+        craftMatrix.setItemDirect(x, currentItem.isEmpty() ? ItemStack.EMPTY : currentItem);
+      }
+
+      if (ingredient.isEmpty()) continue;
+
+      if (currentItem.isEmpty()) {
+        var request = findBestMatchingItemStack(ingredient, filter, cachedStorage);
+        for (var what : request) {
+          var extracted =
+              StorageHelper.poweredExtraction(energy, storage, what, 1, cct.getActionSource());
+          if (extracted > 0) {
+            touchedGridStorage = true;
+            currentItem = what.toStack(Ints.saturatedCast(extracted));
+            break;
+          }
+        }
+      }
+
+      if (currentItem.isEmpty()) {
+        currentItem = takeIngredientFromPlayer(cct, player, ingredient);
+      }
+
+      craftMatrix.setItemDirect(x, currentItem);
+
+      if (currentItem.isEmpty() && msg.craftMissing) {
+        int slot = x;
+        findCraftableKey(ingredient, craftingService)
+            .ifPresent(
+                key -> {
+                  toAutoCraft.computeIfAbsent(key, k -> new ArrayList<>()).add(slot);
+                });
+      }
+    }
+
+    player.containerMenu.slotsChanged(craftMatrix.toContainer());
+
+    if (!toAutoCraft.isEmpty()) {
+      if (touchedGridStorage) storageService.invalidateCache();
+      var stacks =
+          toAutoCraft.entrySet().stream()
+              .map(e -> new IMenuCraftingPacket.AutoCraftEntry(e.getKey(), e.getValue()))
+              .toList();
+      cct.startAutoCrafting(stacks);
+    }
   }
 
   private static NonNullList<Ingredient> getDesiredIngredients(
@@ -172,7 +180,7 @@ public class AdvancedFillCraftingGridPacket {
       if (cct.isPlayerInventorySlotLocked(i)) continue;
       var item = playerInv.getItem(i);
       if (ingredient.test(item)) {
-        var result = item.split(1);
+        var result = playerInv.removeItem(i, 1);
         if (!result.isEmpty()) return result;
       }
     }

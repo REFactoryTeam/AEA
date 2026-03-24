@@ -6,7 +6,6 @@ import appeng.core.definitions.AEItems;
 import com.ref.aea.AEA;
 import com.ref.aea.api.client.IRainbowRender;
 import com.ref.aea.api.pos.SidedGlobalPos;
-import com.ref.aea.core.definitions.AEAItems;
 import com.ref.aea.event.client.AEAInitScreens;
 import com.ref.aea.integration.aea.AEAIntegration;
 import java.nio.file.Files;
@@ -98,7 +97,7 @@ public class AEAClientModEvent {
         AEItems.STONECUTTING_PATTERN);
     event.register(
         AEAClientModEvent::getColorForTime,
-        AEAItems.MIRROR_CONNECTION_TOOL.get(),
+        AEAIntegration.MIRROR_CONNECTION_TOOL.get(),
         AEAIntegration.WIRELESS_CONNECTION_TOOL.get(),
         AEAIntegration.ADVANCED_WIRELESS_CONNECTION_TOOL.get());
     event.register(

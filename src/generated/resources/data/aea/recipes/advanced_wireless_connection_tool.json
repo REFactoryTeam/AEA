@@ -1,0 +1,21 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "S": {
+      "item": "ae2:singularity"
+    },
+    "W": {
+      "item": "aea:wireless_connection_tool"
+    }
+  },
+  "pattern": [
+    " S ",
+    "SWS",
+    " S "
+  ],
+  "result": {
+    "item": "aea:advanced_wireless_connection_tool"
+  },
+  "show_notification": true
+}

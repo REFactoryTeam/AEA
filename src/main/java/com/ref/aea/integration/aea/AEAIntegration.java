@@ -8,6 +8,7 @@ import com.ref.aea.core.definitions.AEABlocks;
 import com.ref.aea.core.definitions.AEAItems;
 import com.ref.aea.data.AEABlockTagsProvider;
 import com.ref.aea.integration.aea.advancedterminal.AdvancedTerminalPart;
+import com.ref.aea.integration.aea.mirror.MirrorConnectionToolItem;
 import com.ref.aea.integration.aea.mirror.MirrorPatternService;
 import com.ref.aea.integration.aea.wireless.*;
 import java.util.List;
@@ -19,6 +20,8 @@ import net.minecraftforge.fml.DistExecutor;
 import net.minecraftforge.registries.RegistryObject;
 
 public class AEAIntegration {
+
+  public static RegistryObject<MirrorConnectionToolItem> MIRROR_CONNECTION_TOOL;
 
   public static RegistryObject<WirelessConnectionToolItem> WIRELESS_CONNECTION_TOOL;
 
@@ -45,6 +48,10 @@ public class AEAIntegration {
   public static RegistryObject<PartItem<AdvancedTerminalPart>> ADVANCED_TERMINAL;
 
   public static void init() {
+    MIRROR_CONNECTION_TOOL =
+        AEAItems.item(
+            "mirror_connection_tool", "Mirror Connection Tool", MirrorConnectionToolItem::new);
+
     WIRELESS_CONNECTION_TOOL =
         AEAItems.item(
             "wireless_connection_tool",
