@@ -23,6 +23,15 @@ An Applied Energistics 2 (AE2) addon and Quality of Life (QoL) mod designed to e
 * **Enhanced Crafting Status:** Added more detailed states to the AE2 crafting monitor, including **"Blocked"** status and **"Pattern Times"** (dispatch counts).
 * **Extended Pattern Access Terminal (EAE):** Added a stylish rainbow border effect to the Extended Pattern Access Terminal UI.
 * **Quartz Cutting Knife Utility:** You can now use the Quartz Cutting Knife to quickly copy the name of an Item or Block to your clipboard.
+* **Advanced Terminal:** A multi-functional terminal with two specialized modes:
+  * **Crafting Mode:**
+    * **Fuzzy Replacement:** Supports fuzzy matching when automatically refilling ingredients from the network.
+    * **Fluid Refill:** Automatically refills consumed fluid containers (e.g., buckets) from the network.
+    * **Auto-Recycle:** Automatically returns recipe residues (buckets, bottles, etc.) to the AE network to prevent grid clogging.
+  * **Processing Mode:** Streamlined extraction of complex recipe ingredients directly from the network.
+  * **Smart Memory Grid (Shared):** Records missing items during recipe transfers. Once the missing items are crafted or available, they are automatically populated into the grid, eliminating the need to re-transfer the recipe from JEI.
+
+
 
 ### 📡 Wireless Connectivity
 * **Wireless Connection Provider:** Wirelessly connects to any AE network node.
