@@ -1,0 +1,57 @@
+package com.ref.aea.mixin.aae.crafting.color;
+
+import appeng.api.config.Actionable;
+import appeng.api.stacks.AEKey;
+import appeng.crafting.CraftingLink;
+import appeng.crafting.inv.ListCraftingInventory;
+import com.ref.aea.config.AEAServerConfig;
+import net.pedroksl.advanced_ae.common.logic.AdvCraftingCPULogic;
+import net.pedroksl.advanced_ae.common.logic.ExecutingCraftingJob;
+import org.spongepowered.asm.mixin.Final;
+import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Shadow;
+import org.spongepowered.asm.mixin.injection.At;
+import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.Redirect;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
+
+@Mixin(value = AdvCraftingCPULogic.class, remap = false)
+public abstract class AdvCraftingCPULogicMixin {
+
+  @Shadow private ExecutingCraftingJob job;
+
+  @Shadow @Final private ListCraftingInventory inventory;
+
+  @Redirect(
+      method = "insert",
+      at =
+          @At(
+              value = "INVOKE",
+              target =
+                  "Lappeng/crafting/CraftingLink;insert(Lappeng/api/stacks/AEKey;JLappeng/api/config/Actionable;)J"))
+  private long redirectLinkInsertToInternalInventory(
+      CraftingLink instance, AEKey what, long amount, Actionable type) {
+    if (AEAServerConfig.cpu) {
+      this.inventory.insert(what, amount, type);
+      return amount;
+    } else {
+      return ((AdvExecutingCraftingJobAccessor) this.job).getLink().insert(what, amount, type);
+    }
+  }
+
+  @Inject(method = "finishJob", at = @At("HEAD"))
+  private void pushFinalOutputOnFinish(boolean success, CallbackInfo ci) {
+    if (AEAServerConfig.cpu) {
+      AEKey finalKey = ((AdvExecutingCraftingJobAccessor) this.job).getFinalOutput().what();
+      long available = this.inventory.extract(finalKey, Long.MAX_VALUE, Actionable.SIMULATE);
+      if (available <= 0) return;
+      long accepted =
+          ((AdvExecutingCraftingJobAccessor) this.job)
+              .getLink()
+              .insert(finalKey, available, Actionable.MODULATE);
+      if (accepted > 0) {
+        this.inventory.extract(finalKey, accepted, Actionable.MODULATE);
+      }
+    }
+  }
+}

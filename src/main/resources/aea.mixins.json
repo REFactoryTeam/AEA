@@ -7,6 +7,9 @@
   "plugin": "com.ref.aea.mixin.AEAMixinConfigPlugin",
   "mixins": [
     "aae.AdvPatternProviderLogicMixin",
+    "aae.crafting.blocked.AdvCraftingCPULogicMixin",
+    "aae.crafting.color.AdvCraftingCPULogicMixin",
+    "aae.crafting.color.AdvExecutingCraftingJobAccessor",
     "ae.crafting.blocked.CraftingCpuLogicMixin",
     "ae.crafting.blocked.CraftingStatusEntryMixin",
     "ae.crafting.blocked.CraftingStatusMixin",
