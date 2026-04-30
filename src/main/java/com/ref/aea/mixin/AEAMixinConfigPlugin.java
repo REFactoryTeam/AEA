@@ -44,8 +44,9 @@ public class AEAMixinConfigPlugin implements IMixinConfigPlugin {
       return enableBuildingGadgets2;
     }
 
-    // AE2 相关的细分配置
-    if (mixinClassName.startsWith("com.ref.aea.mixin.ae.crafting.blocked")) {
+    // AE2 / AdvancedAE 相关的细分配置
+    if (mixinClassName.startsWith("com.ref.aea.mixin.ae.crafting.blocked")
+        || mixinClassName.startsWith("com.ref.aea.mixin.aae.crafting.blocked")) {
       return enableAeCraftingBlocked;
     }
 
@@ -53,7 +54,8 @@ public class AEAMixinConfigPlugin implements IMixinConfigPlugin {
       return enableAeCraftingPatternTimes;
     }
 
-    if (mixinClassName.startsWith("com.ref.aea.mixin.ae.crafting.color")) {
+    if (mixinClassName.startsWith("com.ref.aea.mixin.ae.crafting.color")
+        || mixinClassName.startsWith("com.ref.aea.mixin.aae.crafting.color")) {
       return enableAeCraftingColor;
     }
 
